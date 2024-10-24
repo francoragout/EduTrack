@@ -55,25 +55,34 @@ model Attendance {
   studentId String
 }
 
-enum Division {
+enum DivisionEnum {
   A
   B
   C
   D
 }
 
-enum Level {
-  PRIMARY
-  SECONDARY
+enum GradeEnum {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
+  SIXTH
+}
+
+enum ShiftEnum {
+  MORNING
+  AFTERNOON
 }
 
 model Grade {
-  id          String    @id @default(cuid())
-  grade       Int
-  division    Division
-  level       Level
+  id          String       @id @default(cuid())
+  grade       GradeEnum
+  division    DivisionEnum
+  shift       ShiftEnum
   students    Student[]
-  preceptor   Preceptor @relation(fields: [preceptorId], references: [id])
+  preceptor   Preceptor    @relation(fields: [preceptorId], references: [id])
   preceptorId String
 }
 
