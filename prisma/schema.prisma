@@ -12,3 +12,76 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Tutor {
+  id       String           @id @default(cuid())
+  name     String
+  lastName String
+  email    String
+  phone    String
+  student  TutorOnStudent[]
+}
+
+model Student {
+  id          String           @id @default(cuid())
+  name        String
+  lastName    String
+  age         Int
+  grade       Grade            @relation(fields: [gradeId], references: [id])
+  gradeId     String
+  tutor       TutorOnStudent[]
+  attendances Attendance[]
+}
+
+model TutorOnStudent {
+  tutor     Tutor   @relation(fields: [tutorId], references: [id])
+  tutorId   String
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  @@id([tutorId, studentId])
+}
+
+enum Status {
+  ABSENT
+  LATE
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  status    Status
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+}
+
+enum Division {
+  A
+  B
+  C
+  D
+}
+
+enum Level {
+  PRIMARY
+  SECONDARY
+}
+
+model Grade {
+  id          String    @id @default(cuid())
+  grade       Int
+  division    Division
+  level       Level
+  students    Student[]
+  preceptor   Preceptor @relation(fields: [preceptorId], references: [id])
+  preceptorId String
+}
+
+model Preceptor {
+  id          String  @id @default(cuid())
+  name        String
+  lastName    String
+  email       String
+  permissions Boolean @default(false)
+  grade       Grade[]
+}
