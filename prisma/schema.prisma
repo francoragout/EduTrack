@@ -42,7 +42,7 @@ model TutorOnStudent {
   @@id([tutorId, studentId])
 }
 
-enum Status {
+enum StatusEnum {
   ABSENT
   LATE
 }
@@ -50,7 +50,7 @@ enum Status {
 model Attendance {
   id        String   @id @default(cuid())
   date      DateTime @default(now())
-  status    Status
+  status    StatusEnum
   student   Student  @relation(fields: [studentId], references: [id])
   studentId String
 }
