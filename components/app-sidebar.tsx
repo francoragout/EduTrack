@@ -22,36 +22,10 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Asistencias",
-          url: "/dashboard/attendances",
-          isActive: true,
-        },
-        {
-          title: "Grados",
-          url: "/dashboard/grades",
-        },
-      ],
-    },
-    {
-      title: "Usuarios",
-      url: "#",
-      items: [
-        {
-          title: "Administradores",
-          url: "/dashboard/administrators",
-        },
-        {
           title: "Alumnos",
-          url: "/dashboard/students",
-        },
-        {
-          title: "Preceptores",
-          url: "/dashboard/preceptors",
-        },
-        {
-          title: "Tutores",
-          url: "/dashboard/tutors",
-        },
+          url: "/administration/students",
+          isActive: true,
+        },     
       ],
     },
   ],

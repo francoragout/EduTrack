@@ -14,20 +14,17 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export const iframeHeight = "800px";
-
-export const description = "A sidebar with submenus.";
-interface DashboardLayoutProps {
+interface AdministratioLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DashboardLayout({
+export default function AdministratioLayout({
   children,
-}: Readonly<DashboardLayoutProps>) {
+}: AdministratioLayoutProps) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="overflow-x-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b">
           <div className="flex items-center gap-2 px-3">
             <SidebarTrigger />
@@ -47,7 +44,7 @@ export default function DashboardLayout({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        <div className="gap-4 p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
