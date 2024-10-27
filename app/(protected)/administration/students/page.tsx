@@ -1,4 +1,3 @@
-
 import { StudentsColumns } from "@/components/administration/students/students-columns";
 import { StudentsTable } from "@/components/administration/students/students-table";
 import { db } from "@/lib/db";
@@ -14,7 +13,7 @@ async function getData(): Promise<Student[]> {
     },
   });
 
-  return students.map((student) => StudentSchema.parse(student));
+  return students.map((student: Student) => StudentSchema.parse(student));
 }
 
 export default async function StudentsPage() {
