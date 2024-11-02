@@ -22,18 +22,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { StudentSchema } from "@/lib/zod";
+import { GradeSchema } from "@/lib/zod";
 import Link from "next/link";
-import { CalendarCheck2, Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, Users } from "lucide-react";
+import { grades, shifts } from "@/constants/data";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function StudentsTableRowActions<TData>({
+export function GradeTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const student = StudentSchema.parse(row.original);
+  const grade = GradeSchema.parse(row.original);
 
   return (
     <DropdownMenu>
@@ -56,9 +57,9 @@ export function StudentsTableRowActions<TData>({
             className="flex justify-start pl-2"
             size="sm"
           >
-            <Link href={`/administration/students/${student.id}/attendance`}>
-              <CalendarCheck2 className="mr-2 h-4 w-4" />
-              <span>Asistencia</span>
+            <Link href={`/administration/grades/${grade.id}/students`}>
+              <Users className="mr-2 h-4 w-4" />
+              <span>Alumnos</span>
             </Link>
           </Button>
 
@@ -68,7 +69,7 @@ export function StudentsTableRowActions<TData>({
             className="flex justify-start pl-2"
             size="sm"
           >
-            <Link href={`/administration/students/${student.id}/edit`}>
+            <Link href={`/administration/grades/${grade.id}/edit`}>
               <Pencil className="mr-2 h-4 w-4" />
               <span>Editar</span>
             </Link>
@@ -92,11 +93,16 @@ export function StudentsTableRowActions<TData>({
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Esta acción no se puede deshacer. Esto eliminará
-                  permanentemente el alumno
+                  permanentemente el grado
                   {
                     <span className="text-primary">
                       {" "}
-                      &apos;{student.name}{" "}{student.lastName}&apos;
+                      &apos;{
+                        grades.find((g) => g.value === grade.grade)?.label
+                      }{" "}
+                      {grade.division}, turno{" "}
+                      {shifts.find((s) => s.value === grade.shift)?.label}
+                      &apos;
                     </span>
                   }{" "}
                   y todos los datos asociados de nuestros servidores.
@@ -104,9 +110,7 @@ export function StudentsTableRowActions<TData>({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction>
-                  Continuar
-                </AlertDialogAction>
+                <AlertDialogAction>Continuar</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

@@ -7,12 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DivisionEnum {
+  A
+  B
+  C
+  D
+}
+
+enum GradeEnum {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
+  SIXTH
+}
+
+enum ShiftEnum {
+  MORNING
+  AFTERNOON
+}
+
+model Grade {
+  id          String       @id @default(cuid())
+  grade       GradeEnum
+  division    DivisionEnum
+  shift       ShiftEnum
+  students    Student[]
+}
+
 model Student {
   id          String           @id @default(cuid())
   name        String
   lastName    String
-  dateOfBirth DateTime
   attendance Attendance[]
+  grade       Grade            @relation(fields: [gradeId], references: [id])
+  gradeId     String
 }
 
 enum StatusEnum {

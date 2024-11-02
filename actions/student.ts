@@ -5,7 +5,10 @@ import { StudentSchema } from "@/lib/zod";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export const CreateStudent = async (values: z.infer<typeof StudentSchema>) => {
+export const CreateStudent = async (
+  values: z.infer<typeof StudentSchema>,
+  gradeId: string
+) => {
   const validatedFields = StudentSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -16,14 +19,18 @@ export const CreateStudent = async (values: z.infer<typeof StudentSchema>) => {
     };
   }
 
-  const { name, lastName, dateOfBirth } = validatedFields.data;
+  const { name, lastName } = validatedFields.data;
 
   try {
     await db.student.create({
       data: {
         name,
         lastName,
-        dateOfBirth,
+        grade: {
+          connect: {
+            id: gradeId,
+          },
+        },
       },
     });
 

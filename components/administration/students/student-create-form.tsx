@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Card,
@@ -10,7 +10,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,21 +23,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateStudent } from "@/server/student";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { CreateStudent } from "@/actions/student";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
 import Link from "next/link";
-import { es } from "date-fns/locale";
 
-export default function StudentCreateForm() {
+export default function StudentCreateForm({ gradeId }: { gradeId: string }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof StudentSchema>>({
@@ -51,10 +40,10 @@ export default function StudentCreateForm() {
 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
-      CreateStudent(values).then((response) => {
+      CreateStudent(values, gradeId).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          router.push("/administration/students");
+          router.push(`/administration/grades/${gradeId}/students`);
         } else {
           toast.error(response.message);
         }
@@ -110,52 +99,6 @@ export default function StudentCreateForm() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date of birth</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            disabled={isPending}
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          locale={es}
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      Your date of birth is used to calculate your age.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button
@@ -165,7 +108,7 @@ export default function StudentCreateForm() {
                 className="h-8"
                 disabled={isPending}
               >
-                <Link href="/administration/students">Cancelar</Link>
+                <Link href={`/administration/grades/${gradeId}/students`}>Cancelar</Link>
               </Button>
               <Button
                 type="submit"

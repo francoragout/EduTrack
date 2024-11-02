@@ -6,8 +6,11 @@ import { z } from "zod";
 
 type Student = z.infer<typeof StudentSchema>;
 
-async function getData(): Promise<Student[]> {
+async function getData(gradeId: string): Promise<Student[]> {
   const students = await db.student.findMany({
+    where: {
+      gradeId,
+    },
     include: {
       attendance: true,
     },
@@ -16,8 +19,15 @@ async function getData(): Promise<Student[]> {
   return students.map((student: Student) => StudentSchema.parse(student));
 }
 
-export default async function StudentsPage() {
-  const data = await getData();
-
-  return <StudentsTable columns={StudentsColumns} data={data} />;
+export default async function StudentsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const gradeId = (await params).id;
+  console.log(gradeId);
+  const data = await getData(gradeId);
+  return (
+    <StudentsTable columns={StudentsColumns} data={data} gradeId={gradeId} />
+  );
 }
