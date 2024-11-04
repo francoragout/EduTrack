@@ -25,7 +25,6 @@ export default async function StudentsPage({
   params: Promise<{ id: string }>;
 }) {
   const gradeId = (await params).id;
-  console.log(gradeId);
   const data = await getData(gradeId);
   return (
     <StudentsTable columns={StudentsColumns} data={data} gradeId={gradeId} />
