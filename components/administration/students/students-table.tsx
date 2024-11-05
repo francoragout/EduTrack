@@ -91,7 +91,7 @@ export function StudentsTable<TData, TValue>({
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname(`/administration/grades/${gradeName}/students`));
+    dispatch(setPathname(`/Administración/Grados/${gradeName}/Alumnos`));
   }, [dispatch, gradeName]);
 
   return (

@@ -106,7 +106,7 @@ export default function AttendanceCreateForm({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        <SelectValue placeholder="Estado (opcional)" />
+                        <SelectValue placeholder="Estado (requerido)" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

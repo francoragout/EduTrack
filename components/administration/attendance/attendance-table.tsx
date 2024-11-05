@@ -45,6 +45,27 @@ interface DataTableProps<TData, TValue> {
   grade: Grade;
 }
 
+const translatePathname = (
+  pathname: string,
+  studentName: string,
+  gradeName: string
+) => {
+  const translations: { [key: string]: string } = {
+    administration: "administración",
+    grades: "grados",
+    students: "estudiantes",
+    attendance: "asistencia",
+    [studentName]: studentName,
+    [gradeName]: gradeName,
+    // Add more translations as needed
+  };
+
+  return pathname
+    .split("/")
+    .map((segment) => translations[segment] || segment)
+    .join("/");
+};
+
 export function AttendanceTable<TData, TValue>({
   columns,
   data,
@@ -92,12 +113,12 @@ export function AttendanceTable<TData, TValue>({
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-
-    const studentName = `${student.name} ${student.lastName}`;
     dispatch(
-      setPathname(`/administration/grades/${gradeName}/students/${studentName}/attendance`)
+      setPathname(
+        `/Administración/Grados/${gradeName}/Alumnos/${student.name} ${student.lastName}/Asistencia`
+      )
     );
-  }, [dispatch, student, gradeName]);
+  }, [dispatch, gradeName, student.name, student.lastName]);
 
   return (
     <div className="space-y-4">

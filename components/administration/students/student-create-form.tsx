@@ -16,9 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { StudentSchema } from "@/lib/zod";
+import { GradeSchema, StudentSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -26,8 +26,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateStudent } from "@/actions/student";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { divisions, grades, shifts } from "@/constants/data";
 
-export default function StudentCreateForm({ gradeId }: { gradeId: string }) {
+type Grade = z.infer<typeof GradeSchema>;
+
+interface StudentCreateFormProps {
+  gradeId: string;
+  grade: Grade;
+}
+
+export default function StudentCreateForm({
+  gradeId,
+  grade,
+}: StudentCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof StudentSchema>>({
@@ -37,6 +50,20 @@ export default function StudentCreateForm({ gradeId }: { gradeId: string }) {
       lastName: "",
     },
   });
+
+  const gradeName =
+    grades.find((g) => g.value === grade.grade)?.label +
+    " " +
+    divisions.find((d) => d.value === grade.division)?.label +
+    " " +
+    shifts.find((s) => s.value === grade.shift)?.label;
+
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(
+      setPathname(`Administración/Grados/${gradeName}/Estudiantes/Crear`)
+    );
+  }, [dispatch, gradeName]);
 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
@@ -98,7 +125,6 @@ export default function StudentCreateForm({ gradeId }: { gradeId: string }) {
                   </FormItem>
                 )}
               />
-
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button
@@ -108,7 +134,9 @@ export default function StudentCreateForm({ gradeId }: { gradeId: string }) {
                 className="h-8"
                 disabled={isPending}
               >
-                <Link href={`/administration/grades/${gradeId}/students`}>Cancelar</Link>
+                <Link href={`/administration/grades/${gradeId}/students`}>
+                  Cancelar
+                </Link>
               </Button>
               <Button
                 type="submit"

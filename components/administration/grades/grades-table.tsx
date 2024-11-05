@@ -70,7 +70,7 @@ export function GradesTable<TData, TValue>({
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname("administration/grades"));
+    dispatch(setPathname("Administración/Grados"));
   }, [dispatch]);
 
   return (

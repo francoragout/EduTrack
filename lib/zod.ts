@@ -28,8 +28,22 @@ const AttendanceSchema = z.object({
 // Student schema
 const StudentSchema = z.object({
   id: z.string().optional(),
-  name: z.string(),
-  lastName: z.string(),
+  name: z
+    .string()
+    .min(1, {
+      message: "El nombre es requerido",
+    })
+    .max(30, {
+      message: "El nombre debe tener menos de 30 caracteres",
+    }),
+  lastName: z
+    .string()
+    .min(1, {
+      message: "El apellido es requerido",
+    })
+    .max(30, {
+      message: "El apellido debe tener menos de 30 caracteres",
+    }),
   attendance: z.array(AttendanceSchema).optional(),
   gradeId: z.string().optional(),
 });

@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { GradeSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -38,6 +38,8 @@ import {
 } from "@/components/ui/select";
 import { divisions, grades, shifts } from "@/constants/data";
 import { cn } from "@/lib/utils";
+import { useDispatch } from "react-redux";
+import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 
 export default function GradeCreateForm() {
   const [isPending, startTransition] = useTransition();
@@ -46,6 +48,11 @@ export default function GradeCreateForm() {
     resolver: zodResolver(GradeSchema),
     defaultValues: {},
   });
+
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(setPathname("Administración/Grados/Crear"));
+  }, [dispatch]);
 
   function onSubmit(values: z.infer<typeof GradeSchema>) {
     startTransition(() => {

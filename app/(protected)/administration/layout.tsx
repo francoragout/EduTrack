@@ -16,6 +16,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { RootState } from "@/lib/store";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -26,17 +27,11 @@ interface AdministratioLayoutProps {
 export default function AdministratioLayout({
   children,
 }: AdministratioLayoutProps) {
-  const pathname = useSelector((state: RootState) => state.pathname.value);
-
-  const translations: { [key: string]: string } = {
-    administration: "Administración",
-    grades: "Grados",
-    students: "Alumnos",
-    create: "Crear",
-    edit: "Editar",
-    attendance: "Asistencia",
-  };
-
+  const pathnameTranslate = useSelector(
+    (state: RootState) => state.pathname.value
+  );
+  const pathSegmentsTranslate = pathnameTranslate.split("/").filter(Boolean);
+  const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean);
 
   return (
@@ -52,27 +47,35 @@ export default function AdministratioLayout({
                 {pathSegments.map((segment, index) => {
                   const isFirst = index === 0;
                   const isLast = index === pathSegments.length - 1;
-                  const hasSpace = segment.includes(" ");
+                  const translatedSegment =
+                    pathSegmentsTranslate[index] || segment;
+                  const hasSpace = translatedSegment.includes(" ");
 
                   return (
-                    <BreadcrumbItem key={index}>
-                      {isLast ? (
-                        <span className="font-normal text-foreground">
-                          {translations[segment] || segment}
-                        </span>
-                      ) : (
-                        <BreadcrumbLink
-                          href={
-                            !isFirst && !hasSpace
-                              ? `/${pathSegments.slice(0, index + 1).join("/")}`
-                              : undefined
-                          }
-                        >
-                          {translations[segment] || segment}
-                        </BreadcrumbLink>
+                    <React.Fragment key={index}>
+                      <BreadcrumbItem>
+                        {isFirst || isLast || hasSpace ? (
+                          <span
+                            className={
+                              isLast ? "font-normal text-foreground" : ""
+                            }
+                          >
+                            {translatedSegment}
+                          </span>
+                        ) : (
+                          <BreadcrumbLink
+                            href={`/${pathSegments
+                              .slice(0, index + 1)
+                              .join("/")}`}
+                          >
+                            {translatedSegment}
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {index < pathSegments.length - 1 && (
+                        <BreadcrumbSeparator />
                       )}
-                      {!isLast && <BreadcrumbSeparator />}
-                    </BreadcrumbItem>
+                    </React.Fragment>
                   );
                 })}
               </BreadcrumbList>
