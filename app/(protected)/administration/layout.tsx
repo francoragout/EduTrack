@@ -1,6 +1,7 @@
 "use client";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import { ModeToggle } from "@/components/theme-toggle-button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -16,6 +18,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { RootState } from "@/lib/store";
+import { BellIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -38,7 +41,7 @@ export default function AdministratioLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="overflow-x-auto">
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b justify-between">
           <div className="flex items-center gap-2 px-3">
             <SidebarTrigger />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -80,6 +83,12 @@ export default function AdministratioLayout({
                 })}
               </BreadcrumbList>
             </Breadcrumb>
+          </div>
+          <div className="flex items-center gap-2 px-3">
+            <Button className="rounded-full" variant="outline" size="icon">
+              <BellIcon />
+            </Button>
+            <ModeToggle />
           </div>
         </header>
         <div className="gap-4 p-4">{children}</div>
