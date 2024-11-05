@@ -33,11 +33,9 @@ export function AttendanceTableRowActions<TData>({
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col">
-          {/* <TaskEditForm task={task} /> */}
           <Button
             variant="ghost"
             className="flex justify-start pl-2"
-            // onClick={handleDelete}
             size="sm"
           >
             <Trash className="mr-2 h-4 w-4" />

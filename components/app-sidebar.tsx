@@ -27,6 +27,23 @@ const data = {
         },
       ],
     },
+    {
+      title: "Usuarios",
+      items: [
+        {
+          title: "Administradores",
+          url: "#",
+        },
+        {
+          title: "Preceptores",
+          url: "#",
+        },
+        {
+          title: "Alumnos",
+          url: "#",
+        },
+      ],
+    },
   ],
 };
 

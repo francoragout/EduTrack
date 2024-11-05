@@ -7,7 +7,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
@@ -50,8 +49,7 @@ export default function AdministratioLayout({
                 {pathSegments.map((segment, index) => {
                   const isFirst = index === 0;
                   const isLast = index === pathSegments.length - 1;
-                  const translatedSegment =
-                    pathSegmentsTranslate[index] || segment;
+                  const translatedSegment = pathSegmentsTranslate[index] || segment;
                   const hasSpace = translatedSegment.includes(" ");
 
                   return (
@@ -84,7 +82,7 @@ export default function AdministratioLayout({
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="flex items-center gap-2 px-3">
+          <div className="flex items-center gap-4 px-3">
             <Button className="rounded-full" variant="outline" size="icon">
               <BellIcon />
             </Button>
