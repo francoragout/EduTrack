@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../ui/form";
+} from "../../ui/form";
 import {
   Select,
   SelectContent,
@@ -30,20 +30,23 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../ui/select";
+} from "../../ui/select";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
 import { AttendanceSchema } from "@/lib/zod";
 import { statuses } from "@/constants/data";
 import { CreateAttendance } from "@/actions/attendance";
 
+interface AttendanceCreateFormProps {
+  studentId: string;
+  gradeId: string;
+}
+
 export default function AttendanceCreateForm({
   studentId,
-}: {
-  studentId: string;
-}) {
+  gradeId,
+}: AttendanceCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
@@ -51,23 +54,22 @@ export default function AttendanceCreateForm({
     resolver: zodResolver(AttendanceSchema),
   });
 
-    function onSubmit(values: z.infer<typeof AttendanceSchema>) {
-      startTransition(() => {
-        CreateAttendance(studentId, values).then((response) => {
-          if (response.success) {
-            toast.success(response.message);
-            form.reset();
-            setOpen(false);          
-          } else {
-            toast.error(response.message);
-          }
-        });
+  function onSubmit(values: z.infer<typeof AttendanceSchema>) {
+    startTransition(() => {
+      setOpen(false);
+      CreateAttendance(studentId, gradeId, values).then((response) => {
+        if (response.success) {
+          toast.success(response.message);
+          form.reset();
+        } else {
+          toast.error(response.message);
+        }
       });
-    }
+    });
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      
       <DialogTrigger asChild>
         <Button variant="default" className="h-8" size="sm">
           <PlusCircle className="flex sm:hidden h-4 w-4" />

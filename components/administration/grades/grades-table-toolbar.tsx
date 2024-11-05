@@ -56,7 +56,7 @@ export function GradesTableToolbar<TData>({
         <Button size="sm" className="h-8 flex" asChild>
           <Link href="/administration/grades/create">
             <PlusCircle className="flex sm:hidden h-4 w-4" />
-            <span className="hidden sm:flex">Añadir grado</span>
+            <span className="hidden sm:flex">Nuevo grado</span>
           </Link>
         </Button>
       </div>

@@ -22,11 +22,24 @@ async function getData(gradeId: string): Promise<Student[]> {
 export default async function StudentsPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ gradeId: string }>;
 }) {
-  const gradeId = (await params).id;
+  const gradeId = (await params).gradeId;
+  const grade = await db.grade.findUnique({
+    where: {
+      id: gradeId,
+    },
+    select: {
+      grade: true,
+      division: true,
+      shift: true,
+    },
+  });
   const data = await getData(gradeId);
+  if (!grade) {
+    return <div>Grade not found</div>;
+  }
   return (
-    <StudentsTable columns={StudentsColumns} data={data} gradeId={gradeId} />
+    <StudentsTable columns={StudentsColumns} data={data} gradeId={gradeId} grade={grade}/>
   );
 }

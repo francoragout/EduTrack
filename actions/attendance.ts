@@ -7,6 +7,7 @@ import { z } from "zod";
 
 export const CreateAttendance = async (
   studentId: string,
+  gradeId: string,
   values: z.infer<typeof AttendanceSchema>
 ) => {
   const validatedFields = AttendanceSchema.safeParse(values);
@@ -29,7 +30,7 @@ export const CreateAttendance = async (
       },
     });
 
-    revalidatePath(`/administration/students/${studentId}/attendance`);
+    revalidatePath(`/administration/grades/${gradeId}/students/${studentId}/attendance`);
     return {
       success: true,
       message: "Asistencia creada exitosamente",

@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/table";
 import { GradesTableToolbar } from "./grades-table-toolbar";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,6 +67,11 @@ export function GradesTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(setPathname("administration/grades"));
+  }, [dispatch]);
 
   return (
     <div className="space-y-4">

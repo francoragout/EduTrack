@@ -3,9 +3,8 @@ import StudentCreateForm from "@/components/administration/students/student-crea
 export default async function CreateStudentPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ gradeId: string }>;
 }) {
-  const gradeId = (await params).id;
-  console.log(gradeId);
+  const gradeId = (await params).gradeId;
   return <StudentCreateForm gradeId={gradeId}/>;
 }

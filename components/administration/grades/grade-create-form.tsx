@@ -191,7 +191,7 @@ export default function GradeCreateForm() {
                 className="h-8"
                 disabled={isPending}
               >
-                <Link href="/administration/students">Cancelar</Link>
+                <Link href="/administration/grades">Cancelar</Link>
               </Button>
               <Button
                 type="submit"

@@ -27,17 +27,31 @@ import {
 
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { AttendanceTableToolbar } from "./attendance-table-toolbar";
+import { useDispatch } from "react-redux";
+import { z } from "zod";
+import { GradeSchema, StudentSchema } from "@/lib/zod";
+import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { divisions, grades, shifts } from "@/constants/data";
+
+type Student = z.infer<typeof StudentSchema>;
+type Grade = z.infer<typeof GradeSchema>;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   studentId: string;
+  gradeId: string;
+  student: Student;
+  grade: Grade;
 }
 
 export function AttendanceTable<TData, TValue>({
   columns,
   data,
   studentId,
+  gradeId,
+  student,
+  grade,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -69,9 +83,29 @@ export function AttendanceTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const gradeName =
+    grades.find((g) => g.value === grade.grade)?.label +
+    " " +
+    divisions.find((d) => d.value === grade.division)?.label +
+    " " +
+    shifts.find((s) => s.value === grade.shift)?.label;
+
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+
+    const studentName = `${student.name} ${student.lastName}`;
+    dispatch(
+      setPathname(`/administration/grades/${gradeName}/students/${studentName}/attendance`)
+    );
+  }, [dispatch, student, gradeName]);
+
   return (
     <div className="space-y-4">
-      <AttendanceTableToolbar table={table} studentId={studentId} />
+      <AttendanceTableToolbar
+        table={table}
+        studentId={studentId}
+        gradeId={gradeId}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

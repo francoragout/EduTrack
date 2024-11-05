@@ -56,7 +56,9 @@ export function StudentsTableRowActions<TData>({
             className="flex justify-start pl-2"
             size="sm"
           >
-            <Link href={`/administration/students/${student.id}/attendance`}>
+            <Link
+              href={`/administration/grades/${student.gradeId}/students/${student.id}/attendance`}
+            >
               <CalendarCheck2 className="mr-2 h-4 w-4" />
               <span>Asistencia</span>
             </Link>
@@ -68,7 +70,9 @@ export function StudentsTableRowActions<TData>({
             className="flex justify-start pl-2"
             size="sm"
           >
-            <Link href={`/administration/students/${student.id}/edit`}>
+            <Link
+              href={`/administration/grades/${student.gradeId}/students/${student.id}/edit`}
+            >
               <Pencil className="mr-2 h-4 w-4" />
               <span>Editar</span>
             </Link>
@@ -96,7 +100,7 @@ export function StudentsTableRowActions<TData>({
                   {
                     <span className="text-primary">
                       {" "}
-                      &apos;{student.name}{" "}{student.lastName}&apos;
+                      &apos;{student.name} {student.lastName}&apos;
                     </span>
                   }{" "}
                   y todos los datos asociados de nuestros servidores.
@@ -104,9 +108,7 @@ export function StudentsTableRowActions<TData>({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction>
-                  Continuar
-                </AlertDialogAction>
+                <AlertDialogAction>Continuar</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

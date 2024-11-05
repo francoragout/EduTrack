@@ -64,6 +64,18 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     },
   },
   {
+    accessorKey: "total",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total" />
+    ),
+    cell: ({ row }) => {
+      const attendance = row.original.attendance ?? [];
+      const absent = attendance.filter((a) => a.status === "ABSENT").length;
+      const late = attendance.filter((a) => a.status === "LATE").length / 2;
+      return <div>{absent + late}</div>;
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <StudentsTableRowActions row={row} />,
   },

@@ -22,10 +22,6 @@ const data = {
       title: "Institución",
       items: [
         {
-          title: "Alumnos",
-          url: "/administration/students",
-        },
-        {
           title: "Grados",
           url: "/administration/grades",
         },
