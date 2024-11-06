@@ -4,9 +4,9 @@ import { db } from "@/lib/db";
 export default async function GradeEditPage({
   params,
 }: {
-  params: { gradeId: string };
+  params: Promise<{ gradeId: string }>;
 }) {
-  const gradeId = params.gradeId;
+  const gradeId = (await params).gradeId;
   const grade = await db.grade.findUnique({
     where: {
       id: gradeId,
