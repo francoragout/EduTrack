@@ -48,6 +48,8 @@ export default function StudentCreateForm({
     defaultValues: {
       name: "",
       lastName: "",
+      tutorEmail1: "",
+      tutorEmail2: "",
     },
   });
 
@@ -119,6 +121,44 @@ export default function StudentCreateForm({
                         placeholder="Apellido (requerido)"
                         {...field}
                         disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tutorEmail1"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email tutor 1</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email tutor 1 (opcional)"
+                        {...field}
+                        disabled={isPending}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tutorEmail2"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email tutor 2</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email tutor 2 (opcional)"
+                        {...field}
+                        disabled={isPending}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />

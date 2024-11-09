@@ -37,6 +37,7 @@ import { divisions, grades, shifts } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { Input } from "@/components/ui/input";
 
 type Grade = z.infer<typeof GradeSchema>;
 
@@ -49,6 +50,7 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
       grade: grade.grade,
       division: grade.division,
       shift: grade.shift,
+      preceptorEmail: grade.preceptorEmail,
     },
   });
 
@@ -192,6 +194,26 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="preceptorEmail"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email preceptor</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email preceptor (requerido)"
+                        {...field}
+                        disabled={isPending}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button

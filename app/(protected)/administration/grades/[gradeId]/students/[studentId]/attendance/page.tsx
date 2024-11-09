@@ -47,6 +47,7 @@ export default async function AttendancePage({
       id: studentId,
     },
     select: {
+      id: true,
       name: true,
       lastName: true,
     },
@@ -60,8 +61,6 @@ export default async function AttendancePage({
     <AttendanceTable
       columns={AttendanceColumns}
       data={data}
-      studentId={studentId}
-      gradeId={gradeId}
       student={student}
       grade={grade}
     />

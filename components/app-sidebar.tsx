@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -15,9 +16,40 @@ import {
 } from "@/components/ui/sidebar";
 import { GalleryVerticalEnd } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { NavUser } from "./nav-user";
 
 const data = {
   navMain: [
+    {
+      title: "Usuarios",
+      items: [
+        {
+          title: "Administradores",
+          url: "/administration/admins",
+        },
+        {
+          title: "Preceptores",
+          url: "/administration/preceptors",
+        },
+        {
+          title: "Tutores",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Analisis",
+      items: [
+        {
+          title: "Asistencia",
+          url: "#",
+        },
+        {
+          title: "Notificaciones",
+          url: "#",
+        }
+      ],
+    },
     {
       title: "Institución",
       items: [
@@ -27,27 +59,13 @@ const data = {
         },
       ],
     },
-    {
-      title: "Usuarios",
-      items: [
-        {
-          title: "Administradores",
-          url: "#",
-        },
-        {
-          title: "Preceptores",
-          url: "#",
-        },
-        {
-          title: "Alumnos",
-          url: "#",
-        },
-      ],
-    },
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  session,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { session: any }) {
   const pathname = usePathname();
   return (
     <Sidebar {...props}>
@@ -83,6 +101,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser session={session} />
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

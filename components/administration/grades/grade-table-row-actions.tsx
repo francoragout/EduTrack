@@ -26,6 +26,8 @@ import { GradeSchema } from "@/lib/zod";
 import Link from "next/link";
 import { Pencil, Trash, Users } from "lucide-react";
 import { grades, shifts } from "@/constants/data";
+import { DeleteGrade } from "@/actions/grade";
+import { toast } from "sonner";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,6 +37,16 @@ export function GradeTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const grade = GradeSchema.parse(row.original);
+
+  const handleDelete = async () => {
+    DeleteGrade(grade.id ?? "").then((response) => {
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -100,7 +112,7 @@ export function GradeTableRowActions<TData>({
                       &apos;{
                         grades.find((g) => g.value === grade.grade)?.label
                       }{" "}
-                      {grade.division}, turno{" "}
+                      {grade.division}{" "}
                       {shifts.find((s) => s.value === grade.shift)?.label}
                       &apos;
                     </span>
@@ -110,7 +122,9 @@ export function GradeTableRowActions<TData>({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction>Continuar</AlertDialogAction>
+                <AlertDialogAction onClick={handleDelete}>
+                  Continuar
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AttendanceSchema } from "@/lib/zod";
 import { MoreHorizontal, Trash } from "lucide-react";
+import { DeleteAttendance } from "@/actions/attendance";
+import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -20,6 +23,17 @@ export function AttendanceTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const attendance = AttendanceSchema.parse(row.original);
+  const pathname = usePathname();
+
+  const handleDelete = async () => {
+    DeleteAttendance(attendance.id ?? "", pathname).then((response) => {
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -37,6 +51,7 @@ export function AttendanceTableRowActions<TData>({
             variant="ghost"
             className="flex justify-start pl-2"
             size="sm"
+            onClick={handleDelete}
           >
             <Trash className="mr-2 h-4 w-4" />
             <span>Eliminar</span>

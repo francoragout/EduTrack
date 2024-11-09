@@ -46,7 +46,6 @@ export default function GradeCreateForm() {
   const router = useRouter();
   const form = useForm<z.infer<typeof GradeSchema>>({
     resolver: zodResolver(GradeSchema),
-    defaultValues: {},
   });
 
   const dispatch = useDispatch();
@@ -189,6 +188,26 @@ export default function GradeCreateForm() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="preceptorEmail"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email preceptor</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email preceptor (requerido)"
+                        {...field}
+                        disabled={isPending}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button

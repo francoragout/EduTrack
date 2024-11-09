@@ -16,6 +16,7 @@ export default async function GradeEditPage({
       grade: true,
       division: true,
       shift: true,
+      preceptorEmail: true,
     },
   });
   if (!grade) {

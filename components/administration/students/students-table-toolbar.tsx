@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
-// import { DataTableFacetedFilter } from "@/components/data-table-faceted-filter"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

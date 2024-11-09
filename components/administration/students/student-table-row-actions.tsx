@@ -25,6 +25,8 @@ import {
 import { StudentSchema } from "@/lib/zod";
 import Link from "next/link";
 import { CalendarCheck2, Pencil, Trash } from "lucide-react";
+import { DeleteStudent } from "@/actions/student";
+import { toast } from "sonner";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -34,6 +36,16 @@ export function StudentsTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const student = StudentSchema.parse(row.original);
+
+  const handleDelete = async () => {
+    DeleteStudent(student.id ?? "", student.gradeId || "").then((response) => {
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -96,7 +108,7 @@ export function StudentsTableRowActions<TData>({
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Esta acción no se puede deshacer. Esto eliminará
-                  permanentemente el alumno
+                  permanentemente al alumno:
                   {
                     <span className="text-primary">
                       {" "}
@@ -108,7 +120,9 @@ export function StudentsTableRowActions<TData>({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction>Continuar</AlertDialogAction>
+                <AlertDialogAction onClick={handleDelete}>
+                  Continuar
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

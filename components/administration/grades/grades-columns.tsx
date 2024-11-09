@@ -1,8 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-// import { Badge } from "@/components/ui/badge"
-// import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { z } from "zod";
 import { GradeSchema } from "@/lib/zod";
@@ -99,15 +97,15 @@ export const GradesColumns: ColumnDef<Grade>[] = [
     },
   },
   {
-    accessorKey: "preceptor",
+    accessorKey: "user",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Preceptor" />
     ),
     cell: ({ row }) => {
-      const preceptor = row.getValue("preceptor") as any;
+      const user = row.getValue("user") as any;
       return (
         <div className="flex items-center">
-          <span>{preceptor?.name}</span>
+          <span>{user?.name}</span>
         </div>
       );
     },

@@ -34,21 +34,22 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
-import { AttendanceSchema } from "@/lib/zod";
+import { AttendanceSchema, StudentSchema } from "@/lib/zod";
 import { statuses } from "@/constants/data";
 import { CreateAttendance } from "@/actions/attendance";
+import { usePathname } from "next/navigation";
 
+type Student = z.infer<typeof StudentSchema>;
 interface AttendanceCreateFormProps {
-  studentId: string;
-  gradeId: string;
+  student: Student;
 }
 
 export default function AttendanceCreateForm({
-  studentId,
-  gradeId,
+  student,
 }: AttendanceCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   const form = useForm<z.infer<typeof AttendanceSchema>>({
     resolver: zodResolver(AttendanceSchema),
@@ -57,7 +58,7 @@ export default function AttendanceCreateForm({
   function onSubmit(values: z.infer<typeof AttendanceSchema>) {
     startTransition(() => {
       setOpen(false);
-      CreateAttendance(studentId, gradeId, values).then((response) => {
+      CreateAttendance(student.id || "", pathname, values).then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();

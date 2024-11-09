@@ -6,8 +6,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const CreateAttendance = async (
-  studentId: string,
-  gradeId: string,
+  id: string,
+  pathname: string,
   values: z.infer<typeof AttendanceSchema>
 ) => {
   const validatedFields = AttendanceSchema.safeParse(values);
@@ -26,11 +26,11 @@ export const CreateAttendance = async (
     await db.attendance.create({
       data: {
         status,
-        student: { connect: { id: studentId } },
+        studentId: id,
       },
     });
 
-    revalidatePath(`/administration/grades/${gradeId}/students/${studentId}/attendance`);
+    revalidatePath(pathname);
     return {
       success: true,
       message: "Asistencia creada exitosamente",
@@ -40,6 +40,28 @@ export const CreateAttendance = async (
     return {
       success: false,
       message: "Error al crear asistencia",
+    };
+  }
+};
+
+export const DeleteAttendance = async (id: string, pathname: string) => {
+  try {
+    await db.attendance.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath(pathname);
+    return {
+      success: true,
+      message: "Asistencia eliminada exitosamente",
+    };
+  } catch (error) {
+    console.error("Error deleting attendance:", error);
+    return {
+      success: false,
+      message: "Error al eliminar asistencia",
     };
   }
 };
