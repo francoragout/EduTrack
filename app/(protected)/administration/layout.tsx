@@ -29,10 +29,6 @@ export default async function AdministratioLayout({
             <Separator orientation="vertical" className="mr-2 h-4" />
             <DinamicBreadcrumb />
           </div>
-          <div className="flex items-center gap-4 px-3">
-            <Notifications />
-            <ModeToggle />
-          </div>
         </header>
         <div className="gap-4 p-4">{children}</div>
       </SidebarInset>

@@ -97,20 +97,6 @@ export const GradesColumns: ColumnDef<Grade>[] = [
     },
   },
   {
-    accessorKey: "user",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Preceptor" />
-    ),
-    cell: ({ row }) => {
-      const user = row.getValue("user") as any;
-      return (
-        <div className="flex items-center">
-          <span>{user?.name}</span>
-        </div>
-      );
-    },
-  },
-  {
     id: "actions",
     cell: ({ row }) => <GradeTableRowActions row={row} />,
   },

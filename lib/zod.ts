@@ -23,7 +23,7 @@ const RoleEnum = z.enum(["ADMIN", "PRECEPTOR", "TUTOR"], {
 // Attendance schema
 const AttendanceSchema = z.object({
   id: z.string().optional(),
-  createAt: z.date().optional(),
+  createdAt: z.date().optional(),
   status: StatusEnum,
   studentId: z.string().optional(),
 });
@@ -69,8 +69,9 @@ const StudentSchema = z.object({
 const NotificationSchema = z.object({
   id: z.string().optional(),
   message: z.string(),
-  userId: z.string(),
   createdAt: z.date().default(() => new Date()),
+  read: z.boolean().default(false),
+  userId: z.string(),
 });
 
 // User schema
@@ -79,15 +80,37 @@ const UserSchema = z.object({
   name: z.string().nullish(),
   email: z.string().email().optional(),
   image: z.string().nullable().optional(),
-  role: z.array(z.enum(['ADMIN', 'PRECEPTOR', 'TUTOR'])).optional(),
+  role: z.array(RoleEnum).optional(),
+  createdAt: z.date().optional(),
 });
 
-// UserStudent schema
-const UserStudentSchema = z.object({
-  userId: z.string(),
-  studentId: z.string(),
-  user: UserSchema,
-  student: StudentSchema,
+// Tutor schema
+const TutorSchema = z.object({
+  id: z.string().optional(),
+  name: z
+    .string()
+    .min(1, {
+      message: "El nombre es requerido",
+    })
+    .max(30, {
+      message: "El nombre debe tener menos de 30 caracteres",
+    }),
+  lastName: z
+    .string()
+    .min(1, {
+      message: "El apellido es requerido",
+    })
+    .max(30, {
+      message: "El apellido debe tener menos de 30 caracteres",
+    }),
+  email: z.union([
+    z.string().email({
+      message: "Ingrese un email válido",
+    }),
+    z.string().max(0).optional(),
+    z.null(),
+  ]),
+  
 });
 
 // Grade schema
@@ -97,24 +120,43 @@ const GradeSchema = z.object({
   grade: GradeEnum,
   shift: ShiftEnum,
   students: z.array(StudentSchema).optional(),
-  userId: z.string().nullish(),
-  preceptorEmail: z.union([
+});
+
+// Preceptor schema
+const PreceptorSchema = z.object({
+  id: z.string().optional(),
+  name: z
+    .string()
+    .min(1, {
+      message: "El nombre es requerido",
+    })
+    .max(30, {
+      message: "El nombre debe tener menos de 30 caracteres",
+    }),
+  lastName: z
+    .string()
+    .min(1, {
+      message: "El apellido es requerido",
+    })
+    .max(30, {
+      message: "El apellido debe tener menos de 30 caracteres",
+    }),
+  email: z.union([
     z.string().email({
       message: "Ingrese un email válido",
     }),
     z.string().max(0).optional(),
     z.null(),
   ]),
-  user: UserSchema.nullish(),
+  grades: z.array(GradeSchema).optional(),
 });
-
 
 export {
   StudentSchema,
   AttendanceSchema,
   GradeSchema,
   UserSchema,
-  UserStudentSchema,
   NotificationSchema,
+  PreceptorSchema,
   RoleEnum,
 };

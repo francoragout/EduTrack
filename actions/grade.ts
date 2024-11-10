@@ -16,39 +16,16 @@ export const CreateGrade = async (values: z.infer<typeof GradeSchema>) => {
     };
   }
 
-  const { division, grade, shift, preceptorEmail } = validatedFields.data;
+  const { division, grade, shift } = validatedFields.data;
 
   try {
-    const gradeId = await db.grade.create({
+    await db.grade.create({
       data: {
         division,
         grade,
         shift,
-        preceptorEmail,
       },
     });
-
-    if (preceptorEmail) {
-      const userId = await db.user.findUnique({
-        where: {
-          email: preceptorEmail,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (userId) {
-        await db.grade.update({
-          where: {
-            id: gradeId.id,
-          },
-          data: {
-            userId: userId.id,
-          },
-        });
-      }
-    }
 
     revalidatePath("/administration/grades");
     return {
@@ -78,10 +55,10 @@ export const UpdateGrade = async (
     };
   }
 
-  const { division, grade, shift, preceptorEmail } = validatedFields.data;
+  const { division, grade, shift } = validatedFields.data;
 
   try {
-    const gradeId = await db.grade.update({
+    await db.grade.update({
       where: {
         id,
       },
@@ -89,31 +66,8 @@ export const UpdateGrade = async (
         division,
         grade,
         shift,
-        preceptorEmail,
       },
     });
-
-    if (preceptorEmail) {
-      const userId = await db.user.findUnique({
-        where: {
-          email: preceptorEmail,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (userId) {
-        await db.grade.update({
-          where: {
-            id: gradeId.id,
-          },
-          data: {
-            userId: userId.id,
-          },
-        });
-      }
-    }
 
     revalidatePath("/administration/grades");
     return {

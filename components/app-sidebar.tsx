@@ -33,21 +33,8 @@ const data = {
         },
         {
           title: "Tutores",
-          url: "#",
+          url: "/administration/tutors",
         },
-      ],
-    },
-    {
-      title: "Analisis",
-      items: [
-        {
-          title: "Asistencia",
-          url: "#",
-        },
-        {
-          title: "Notificaciones",
-          url: "#",
-        }
       ],
     },
     {

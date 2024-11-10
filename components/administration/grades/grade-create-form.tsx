@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { GradeSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
@@ -23,9 +22,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
-
 import Link from "next/link";
 import { CreateGrade } from "@/actions/grade";
 import {
@@ -188,26 +185,6 @@ export default function GradeCreateForm() {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="preceptorEmail"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Email preceptor</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Email preceptor (requerido)"
-                        {...field}
-                        disabled={isPending}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button

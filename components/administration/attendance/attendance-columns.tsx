@@ -11,12 +11,12 @@ type Attendance = z.infer<typeof AttendanceSchema>;
 
 export const AttendanceColumns: ColumnDef<Attendance>[] = [
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fecha" />
     ),
     cell: ({ row }) => {
-        const date = row.getValue("date") as Date;
+        const date = row.getValue("createdAt") as Date;
         return (
             <div>
             {date.toLocaleDateString("es-AR", {

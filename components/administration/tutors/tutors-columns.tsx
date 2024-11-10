@@ -9,7 +9,7 @@ import { PersonIcon } from "@radix-ui/react-icons";
 
 type User = z.infer<typeof UserSchema>;
 
-export const AdminsColumns: ColumnDef<User>[] = [
+export const TutorsColumns: ColumnDef<User>[] = [
   {
     accessorKey: "image",
     header: () => <div className="sr-only">Image</div>,
