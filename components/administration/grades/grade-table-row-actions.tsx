@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { GradeSchema } from "@/lib/zod";
 import Link from "next/link";
-import { Pencil, Trash, Users } from "lucide-react";
+import { Pencil, Trash, User, Users } from "lucide-react";
 import { grades, shifts } from "@/constants/data";
 import { DeleteGrade } from "@/actions/grade";
 import { toast } from "sonner";

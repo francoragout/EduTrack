@@ -10,6 +10,12 @@ async function getData(): Promise<Grade[]> {
   const grades = await db.grade.findMany({
     include: {
       students: true,
+      preceptor: {
+        select: {
+          name: true,
+          lastName: true,
+        },
+      },
     },
   });
   return grades.map((grade: Grade) => GradeSchema.parse(grade));

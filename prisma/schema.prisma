@@ -83,8 +83,8 @@ model Preceptor {
   name     String
   lastName String
   email    String
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String  @unique
+  user     User?    @relation(fields: [userId], references: [id])
+  userId   String?  @unique
   grades   Grade[]
 }
 
@@ -94,7 +94,7 @@ model Grade {
   division    DivisionEnum
   shift       ShiftEnum
   students    Student[]
-  preceptor   Preceptor?    @relation(fields: [preceptorId], references: [id])
+  preceptor   Preceptor?   @relation(fields: [preceptorId], references: [id])
   preceptorId String?
 }
 
@@ -104,6 +104,8 @@ model Attendance {
   status    StatusEnum
   student   Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String
+
+  // @@unique([createdAt, studentId])
 }
 
 model Notifications {

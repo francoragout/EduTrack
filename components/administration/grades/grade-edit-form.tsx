@@ -50,7 +50,6 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
       grade: grade.grade,
       division: grade.division,
       shift: grade.shift,
-      preceptorEmail: grade.preceptorEmail,
     },
   });
 
@@ -190,25 +189,6 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="preceptorEmail"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Email preceptor</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Email preceptor (requerido)"
-                        {...field}
-                        disabled={isPending}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

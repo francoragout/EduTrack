@@ -15,62 +15,54 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { GradeSchema, StudentSchema } from "@/lib/zod";
+import { GradeSchema, PreceptorSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateStudent } from "@/actions/student";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CreateGrade } from "@/actions/grade";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { divisions, grades, shifts } from "@/constants/data";
+import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
-import { divisions, grades, shifts } from "@/constants/data";
+import { Input } from "@/components/ui/input";
+import { CreatePreceptor } from "@/actions/preceptor";
 
-type Grade = z.infer<typeof GradeSchema>;
-
-interface StudentCreateFormProps {
-  gradeId: string;
-  grade: Grade;
-}
-
-export default function StudentCreateForm({
-  gradeId,
-  grade,
-}: StudentCreateFormProps) {
+export default function PreceptorCreateForm() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const form = useForm<z.infer<typeof StudentSchema>>({
-    resolver: zodResolver(StudentSchema),
+  const form = useForm<z.infer<typeof PreceptorSchema>>({
+    resolver: zodResolver(PreceptorSchema),
     defaultValues: {
       name: "",
       lastName: "",
+      email: "",
     },
   });
 
-  const gradeName =
-    grades.find((g) => g.value === grade.grade)?.label +
-    " " +
-    divisions.find((d) => d.value === grade.division)?.label +
-    " " +
-    shifts.find((s) => s.value === grade.shift)?.label;
-
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(
-      setPathname(`Administración/Grados/${gradeName}/Estudiantes/Crear`)
-    );
-  }, [dispatch, gradeName]);
+    dispatch(setPathname("Administración/Grados/Crear"));
+  }, [dispatch]);
 
-  function onSubmit(values: z.infer<typeof StudentSchema>) {
+  function onSubmit(values: z.infer<typeof PreceptorSchema>) {
     startTransition(() => {
-      CreateStudent(values, gradeId).then((response) => {
+      CreatePreceptor(values).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          router.push(`/administration/grades/${gradeId}/students`);
+          router.push("/administration/preceptors");
         } else {
           toast.error(response.message);
         }
@@ -81,7 +73,7 @@ export default function StudentCreateForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Crear Alumno</CardTitle>
+        <CardTitle>Crear Preceptor</CardTitle>
         <CardDescription>
           Utilice Tabs para navegar más rápido entre los campos.
         </CardDescription>
@@ -126,6 +118,24 @@ export default function StudentCreateForm({
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email (requerido)"
+                        {...field}
+                        disabled={isPending}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button
@@ -135,9 +145,7 @@ export default function StudentCreateForm({
                 className="h-8"
                 disabled={isPending}
               >
-                <Link href={`/administration/grades/${gradeId}/students`}>
-                  Cancelar
-                </Link>
+                <Link href="/administration/preceptors">Cancelar</Link>
               </Button>
               <Button
                 type="submit"

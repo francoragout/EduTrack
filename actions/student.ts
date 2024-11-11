@@ -19,15 +19,13 @@ export const CreateStudent = async (
     };
   }
 
-  const { name, lastName, tutorEmail1, tutorEmail2 } = validatedFields.data;
+  const { name, lastName } = validatedFields.data;
 
   try {
-    const student = await db.student.create({
+    await db.student.create({
       data: {
         name,
         lastName,
-        tutorEmail1,
-        tutorEmail2,
         grade: {
           connect: {
             id: gradeId,
@@ -35,31 +33,6 @@ export const CreateStudent = async (
         },
       },
     });
-
-    const connectTutor = async (tutorEmail: string | undefined) => {
-      if (tutorEmail) {
-        const user = await db.user.findFirst({
-          where: {
-            email: tutorEmail,
-          },
-          select: {
-            id: true,
-          },
-        });
-  
-        if (user) {
-          await db.userStudent.create({
-            data: {
-              studentId: student.id,
-              userId: user.id,
-            },
-          });
-        }
-      }
-    };
-  
-    await connectTutor(tutorEmail1 as string);
-    await connectTutor(tutorEmail2 as string);
 
     revalidatePath(`/administration/grades/${gradeId}/students`);
     return {
@@ -90,7 +63,7 @@ export const UpdateStudent = async (
     };
   }
 
-  const { name, lastName, tutorEmail1, tutorEmail2 } = validatedFields.data;
+  const { name, lastName } = validatedFields.data;
 
   try {
     await db.student.update({
@@ -100,8 +73,6 @@ export const UpdateStudent = async (
       data: {
         name,
         lastName,
-        tutorEmail1,
-        tutorEmail2,
       },
     });
 

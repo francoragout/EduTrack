@@ -27,6 +27,10 @@ import {
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { divisions, grades, shifts } from "@/constants/data";
+import { GradeSchema } from "@/lib/zod";
+import { z } from "zod";
+import { PreceptorsTableToolbar } from "./preceptors-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -69,11 +73,12 @@ export function PreceptorsTable<TData, TValue>({
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname("Administración/Administradores"));
+    dispatch(setPathname(`/Administración/Preceptores`));
   }, [dispatch]);
 
   return (
     <div className="space-y-4">
+      <PreceptorsTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

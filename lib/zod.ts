@@ -49,20 +49,6 @@ const StudentSchema = z.object({
     }),
   attendance: z.array(AttendanceSchema).optional(),
   gradeId: z.string().optional(),
-  tutorEmail1: z.union([
-    z.string().email({
-      message: "Ingrese un email válido",
-    }),
-    z.string().max(0).optional(),
-    z.null(),
-  ]),
-  tutorEmail2: z.union([
-    z.string().email({
-      message: "Ingrese un email válido",
-    }),
-    z.string().max(0).optional(),
-    z.null(),
-  ]),
 });
 
 // Notifications schema
@@ -110,16 +96,6 @@ const TutorSchema = z.object({
     z.string().max(0).optional(),
     z.null(),
   ]),
-  
-});
-
-// Grade schema
-const GradeSchema = z.object({
-  id: z.string().optional(),
-  division: DivisionEnum,
-  grade: GradeEnum,
-  shift: ShiftEnum,
-  students: z.array(StudentSchema).optional(),
 });
 
 // Preceptor schema
@@ -141,14 +117,21 @@ const PreceptorSchema = z.object({
     .max(30, {
       message: "El apellido debe tener menos de 30 caracteres",
     }),
-  email: z.union([
-    z.string().email({
-      message: "Ingrese un email válido",
-    }),
-    z.string().max(0).optional(),
-    z.null(),
-  ]),
-  grades: z.array(GradeSchema).optional(),
+  email: z.string().email({
+    message: "Ingrese un email válido",
+  }),
+  grades: z.array(GradeEnum).optional(),
+});
+
+// Grade schema
+const GradeSchema = z.object({
+  id: z.string().optional(),
+  division: DivisionEnum,
+  grade: GradeEnum,
+  shift: ShiftEnum,
+  students: z.array(StudentSchema).optional(),
+  preceptorId: z.string().nullish(),
+  preceptor: PreceptorSchema.nullish(),
 });
 
 export {

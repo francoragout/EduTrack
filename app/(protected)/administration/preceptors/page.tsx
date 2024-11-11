@@ -1,20 +1,16 @@
 import { PreceptorsColumns } from "@/components/administration/preceptors/preceptors-columns";
 import { PreceptorsTable } from "@/components/administration/preceptors/preceptors-table";
 import { db } from "@/lib/db";
-import { UserSchema, RoleEnum } from "@/lib/zod";
+import { UserSchema, RoleEnum, PreceptorSchema } from "@/lib/zod";
 import { z } from "zod";
 
-type User = z.infer<typeof UserSchema>;
+type Preceptor = z.infer<typeof PreceptorSchema>;
 
-async function getData(): Promise<User[]> {
-  const preceptors = await db.user.findMany({
-    where: {
-      role: {
-        has: RoleEnum.Enum.PRECEPTOR,
-      },
-    },
-  });
-  return preceptors.map((preceptor) => UserSchema.parse(preceptor));
+async function getData(): Promise<Preceptor[]> {
+  const preceptors = await db.preceptor.findMany();
+  return preceptors.map((preceptor: Preceptor) =>
+    PreceptorSchema.parse(preceptor)
+  );
 }
 
 export default async function AdminsPage() {
