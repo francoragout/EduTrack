@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { GradeSchema } from "@/lib/zod";
+import { GradeSchema, PreceptorSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,13 @@ import { cn } from "@/lib/utils";
 import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 
-export default function GradeCreateForm() {
+type Preceptors = z.infer<typeof PreceptorSchema>;
+
+export default function GradeCreateForm({
+  preceptors,
+}: {
+  preceptors: Preceptors[];
+}) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof GradeSchema>>({
@@ -81,11 +87,7 @@ export default function GradeCreateForm() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Grado</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                      disabled={isPending}
-                    >
+                    <Select onValueChange={field.onChange} disabled={isPending}>
                       <FormControl>
                         <SelectTrigger
                           className={cn(
@@ -117,11 +119,7 @@ export default function GradeCreateForm() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>División</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                      disabled={isPending}
-                    >
+                    <Select onValueChange={field.onChange} disabled={isPending}>
                       <FormControl>
                         <SelectTrigger
                           className={cn(
@@ -156,11 +154,7 @@ export default function GradeCreateForm() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Turno</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                      disabled={isPending}
-                    >
+                    <Select onValueChange={field.onChange} disabled={isPending}>
                       <FormControl>
                         <SelectTrigger
                           className={cn(
@@ -176,6 +170,41 @@ export default function GradeCreateForm() {
                           {shifts.map((shift) => (
                             <SelectItem key={shift.value} value={shift.value}>
                               {shift.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="preceptorId"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Preceptor</FormLabel>
+                    <Select onValueChange={field.onChange} disabled={isPending}>
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <SelectValue placeholder="Preceptor (opcional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {preceptors.map((preceptor) => (
+                            <SelectItem
+                              key={preceptor.id}
+                              value={preceptor.id || ""}
+                            >
+                              {preceptor.name} {preceptor.lastName}
                             </SelectItem>
                           ))}
                         </SelectGroup>

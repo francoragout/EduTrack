@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { PreceptorSchema, UserSchema } from "@/lib/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { grades, divisions, shifts } from "@/constants/data";
 
 type Preceptor = z.infer<typeof PreceptorSchema>;
 
@@ -37,7 +38,7 @@ export const PreceptorsColumns: ColumnDef<Preceptor>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Apellido" />
     ),
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("lastName")}</div>,
   },
   {
     accessorKey: "email",
@@ -48,9 +49,21 @@ export const PreceptorsColumns: ColumnDef<Preceptor>[] = [
   },
   {
     accessorKey: "grades",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Grados" />
-    ),
+    header: () => <div className="text-left">Grados</div>,
+    cell: ({ row }) => {
+      const gradesData = row.getValue("grades") as { division: string; grade: string; shift: string }[];
+      return (
+        <div>
+          {gradesData.map((grade, index) => (
+            <div key={index}>
+              {grades.find(g => g.value === grade.grade)?.label}{" "}
+              {divisions.find(d => d.value === grade.division)?.label}{" "}
+              {shifts.find(s => s.value === grade.shift)?.label}
+            </div>
+          ))}
+        </div>
+      );
+    },
   }
   
 

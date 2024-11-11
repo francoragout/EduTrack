@@ -16,10 +16,24 @@ export default async function GradeEditPage({
       grade: true,
       division: true,
       shift: true,
+      preceptorId: true,
     },
   });
   if (!grade) {
     return <div>Grade not found</div>;
   }
-  return <GradeEditForm grade={grade} />;
+  const preceptors = await db.preceptor.findMany({
+    select: {
+      id: true,
+      name: true,
+      lastName: true,
+      email: true,
+    },
+  });
+
+  if (!preceptors) {
+    return <div>Preceptors not found</div>;
+  }
+
+  return <GradeEditForm grade={grade} preceptors={preceptors}/>;
 }

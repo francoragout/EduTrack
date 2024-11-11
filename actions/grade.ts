@@ -16,7 +16,7 @@ export const CreateGrade = async (values: z.infer<typeof GradeSchema>) => {
     };
   }
 
-  const { division, grade, shift } = validatedFields.data;
+  const { division, grade, shift, preceptorId } = validatedFields.data;
 
   try {
     await db.grade.create({
@@ -24,6 +24,7 @@ export const CreateGrade = async (values: z.infer<typeof GradeSchema>) => {
         division,
         grade,
         shift,
+        preceptorId,
       },
     });
 
@@ -55,7 +56,7 @@ export const UpdateGrade = async (
     };
   }
 
-  const { division, grade, shift } = validatedFields.data;
+  const { division, grade, shift, preceptorId } = validatedFields.data;
 
   try {
     await db.grade.update({
@@ -66,6 +67,7 @@ export const UpdateGrade = async (
         division,
         grade,
         shift,
+        preceptorId,
       },
     });
 

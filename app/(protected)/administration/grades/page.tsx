@@ -14,6 +14,7 @@ async function getData(): Promise<Grade[]> {
         select: {
           name: true,
           lastName: true,
+          email: true,
         },
       },
     },

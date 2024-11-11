@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { GradeSchema } from "@/lib/zod";
+import { GradeSchema, PreceptorSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -40,8 +40,17 @@ import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { Input } from "@/components/ui/input";
 
 type Grade = z.infer<typeof GradeSchema>;
+type Preceptor = z.infer<typeof PreceptorSchema>;
 
-export default function GradeEditForm({ grade }: { grade: Grade }) {
+interface GradeEditFormProps {
+  grade: Grade;
+  preceptors: Preceptor[];
+}
+
+export default function GradeEditForm({
+  grade,
+  preceptors,
+}: GradeEditFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof GradeSchema>>({
@@ -50,6 +59,7 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
       grade: grade.grade,
       division: grade.division,
       shift: grade.shift,
+      preceptorId: grade.preceptorId,
     },
   });
 
@@ -194,6 +204,44 @@ export default function GradeEditForm({ grade }: { grade: Grade }) {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="preceptorId"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Preceptor</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      disabled={isPending}
+                      defaultValue={field.value || ""}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          className={cn(
+                            "pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <SelectValue placeholder="Preceptor (opcional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {preceptors.map((preceptor) => (
+                            <SelectItem
+                              key={preceptor.id}
+                              value={preceptor.id || ""}
+                            >
+                              {preceptor.name} {preceptor.lastName}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button

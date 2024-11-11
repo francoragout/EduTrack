@@ -54,7 +54,7 @@ export default function PreceptorCreateForm() {
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname("Administración/Grados/Crear"));
+    dispatch(setPathname("Administración/Preceptores/Crear"));
   }, [dispatch]);
 
   function onSubmit(values: z.infer<typeof PreceptorSchema>) {

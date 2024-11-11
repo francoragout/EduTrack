@@ -98,6 +98,19 @@ const TutorSchema = z.object({
   ]),
 });
 
+// Grade schema
+const GradeSchema: z.ZodType<any> = z.lazy(() =>
+  z.object({
+    id: z.string().optional(),
+    division: DivisionEnum,
+    grade: GradeEnum,
+    shift: ShiftEnum,
+    students: z.array(StudentSchema).optional(),
+    preceptorId: z.string().nullish(),
+    preceptor: PreceptorSchema.nullish(),
+  })
+);
+
 // Preceptor schema
 const PreceptorSchema = z.object({
   id: z.string().optional(),
@@ -120,18 +133,8 @@ const PreceptorSchema = z.object({
   email: z.string().email({
     message: "Ingrese un email válido",
   }),
-  grades: z.array(GradeEnum).optional(),
-});
-
-// Grade schema
-const GradeSchema = z.object({
-  id: z.string().optional(),
-  division: DivisionEnum,
-  grade: GradeEnum,
-  shift: ShiftEnum,
-  students: z.array(StudentSchema).optional(),
-  preceptorId: z.string().nullish(),
-  preceptor: PreceptorSchema.nullish(),
+  gradeId: z.string().optional(),
+  grades: z.array(GradeSchema).optional(), // Add this line to include grades
 });
 
 export {
