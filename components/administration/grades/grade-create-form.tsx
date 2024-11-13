@@ -204,7 +204,7 @@ export default function GradeCreateForm({
                               key={preceptor.id}
                               value={preceptor.id || ""}
                             >
-                              {preceptor.name} {preceptor.lastName}
+                              {preceptor.email}
                             </SelectItem>
                           ))}
                         </SelectGroup>

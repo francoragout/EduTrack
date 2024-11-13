@@ -27,15 +27,25 @@ import {
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { TutorsTableToolbar } from "./tutors-table-toolbar";
+import { z } from "zod";
+import { GradeSchema, StudentSchema } from "@/lib/zod";
+import { divisions, grades, shifts } from "@/constants/data";
 
+type Student = z.infer<typeof StudentSchema>;
+type Grade = z.infer<typeof GradeSchema>;
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  student: Student;
+  grade: Grade;
 }
 
 export function TutorsTable<TData, TValue>({
   columns,
   data,
+  student,
+  grade,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -67,13 +77,25 @@ export function TutorsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const gradeName =
+    grades.find((g) => g.value === grade.grade)?.label +
+    " " +
+    divisions.find((d) => d.value === grade.division)?.label +
+    " " +
+    shifts.find((s) => s.value === grade.shift)?.label;
+  console.log(student);
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname("Administración/Administradores"));
-  }, [dispatch]);
+    dispatch(
+      setPathname(
+        `/Administración/Grados/${gradeName}/Alumnos/${student.name} ${student.lastName}/Tutores`
+      )
+    );
+  }, [dispatch, gradeName, student.name, student.lastName]);
 
   return (
     <div className="space-y-4">
+      <TutorsTableToolbar table={table} student={student}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

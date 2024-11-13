@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { StudentsTableRowActions } from "./student-table-row-actions";
 import { z } from "zod";
 import { StudentSchema } from "@/lib/zod";
+import clsx from "clsx";
 
 type Student = z.infer<typeof StudentSchema>;
 
@@ -37,7 +38,18 @@ export const StudentsColumns: ColumnDef<Student>[] = [
       const attendancePercentage =
         100 - (totalAbsences / totalAllowedAbsences) * 100;
 
-      return <div>{attendancePercentage.toFixed(1)}%</div>;
+      return (
+        <div
+          className={clsx(
+            attendancePercentage === 100 && "text-green-500",
+            attendancePercentage < 100 && "text-yellow-500",
+            attendancePercentage <= 50 && "text-red-500",
+            "font-medium"
+          )}
+        >
+          {attendancePercentage.toFixed(1)}%
+        </div>
+      );
     },
   },
   {

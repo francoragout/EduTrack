@@ -53,9 +53,9 @@ model Tutor {
   id       String           @id @default(cuid())
   name     String
   lastName String
-  email    String
-  user     User             @relation(fields: [userId], references: [id])
-  userId   String           @unique
+  email    String           
+  user     User?            @relation(fields: [userId], references: [id])
+  userId   String?          @unique
   students TutorOnStudent[]
 }
 
@@ -83,8 +83,8 @@ model Preceptor {
   name     String
   lastName String
   email    String
-  user     User?    @relation(fields: [userId], references: [id])
-  userId   String?  @unique
+  user     User?   @relation(fields: [userId], references: [id])
+  userId   String? @unique
   grades   Grade[]
 }
 

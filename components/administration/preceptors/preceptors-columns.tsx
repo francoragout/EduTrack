@@ -7,6 +7,7 @@ import { z } from "zod";
 import { PreceptorSchema, UserSchema } from "@/lib/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { grades, divisions, shifts } from "@/constants/data";
+import { PreceptorsTableRowActions } from "./preceptor-table-row-actions";
 
 type Preceptor = z.infer<typeof PreceptorSchema>;
 
@@ -51,24 +52,26 @@ export const PreceptorsColumns: ColumnDef<Preceptor>[] = [
     accessorKey: "grades",
     header: () => <div className="text-left">Grados</div>,
     cell: ({ row }) => {
-      const gradesData = row.getValue("grades") as { division: string; grade: string; shift: string }[];
+      const gradesData = row.getValue("grades") as {
+        division: string;
+        grade: string;
+        shift: string;
+      }[];
       return (
         <div>
           {gradesData.map((grade, index) => (
             <div key={index}>
-              {grades.find(g => g.value === grade.grade)?.label}{" "}
-              {divisions.find(d => d.value === grade.division)?.label}{" "}
-              {shifts.find(s => s.value === grade.shift)?.label}
+              {grades.find((g) => g.value === grade.grade)?.label}{" "}
+              {divisions.find((d) => d.value === grade.division)?.label}{" "}
+              {shifts.find((s) => s.value === grade.shift)?.label}
             </div>
           ))}
         </div>
       );
     },
-  }
-  
-
-//   {
-//     id: "actions",
-//     cell: ({ row }) => <GradeTableRowActions row={row} />,
-//   },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <PreceptorsTableRowActions row={row} />,
+  },
 ];

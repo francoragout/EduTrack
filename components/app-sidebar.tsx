@@ -14,9 +14,12 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { GalleryVerticalEnd } from "lucide-react";
+import { GalleryVerticalEnd, MoonIcon, SunIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { NavUser } from "./nav-user";
+import { Badge } from "./ui/badge";
+import { ModeToggle } from "./theme-toggle-button";
+import { useTheme } from "next-themes";
 
 const data = {
   navMain: [
@@ -30,10 +33,6 @@ const data = {
         {
           title: "Preceptores",
           url: "/administration/preceptors",
-        },
-        {
-          title: "Tutores",
-          url: "/administration/tutors",
         },
       ],
     },
@@ -54,6 +53,11 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & { session: any }) {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -71,6 +75,11 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenuButton className="flex justify-between">
+            Notificaciónes <Badge>0</Badge>
+          </SidebarMenuButton>
+        </SidebarGroup>
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
@@ -89,6 +98,19 @@ export function AppSidebar({
         ))}
       </SidebarContent>
       <SidebarFooter>
+        <SidebarGroup>
+          <SidebarMenuButton
+            onClick={toggleTheme}
+            className="flex justify-between"
+          >
+            Theme
+            <div className="flex">
+              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </div>
+          </SidebarMenuButton>
+        </SidebarGroup>
+
         <NavUser session={session} />
       </SidebarFooter>
       <SidebarRail />

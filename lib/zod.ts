@@ -89,13 +89,18 @@ const TutorSchema = z.object({
     .max(30, {
       message: "El apellido debe tener menos de 30 caracteres",
     }),
-  email: z.union([
-    z.string().email({
-      message: "Ingrese un email válido",
-    }),
-    z.string().max(0).optional(),
-    z.null(),
-  ]),
+  email: z.string().email({
+    message: "Ingrese un email válido",
+  }),
+  studentId: z.string().optional(),
+});
+
+// TutorOnStudent Schema
+const TutorOnStudentSchema = z.object({
+  tutor: TutorSchema.optional(),
+  tutorId: z.string().optional(),
+  student: StudentSchema.optional(),
+  studentId: z.string().optional(),
 });
 
 // Grade schema
@@ -134,11 +139,13 @@ const PreceptorSchema = z.object({
     message: "Ingrese un email válido",
   }),
   gradeId: z.string().optional(),
-  grades: z.array(GradeSchema).optional(), // Add this line to include grades
+  grades: z.array(GradeSchema).optional(),
 });
 
 export {
+  TutorOnStudentSchema,
   StudentSchema,
+  TutorSchema,
   AttendanceSchema,
   GradeSchema,
   UserSchema,

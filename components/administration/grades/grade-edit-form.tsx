@@ -63,10 +63,17 @@ export default function GradeEditForm({
     },
   });
 
+  const gradeName =
+    grades.find((g) => g.value === grade.grade)?.label +
+    " " +
+    divisions.find((d) => d.value === grade.division)?.label +
+    " " +
+    shifts.find((s) => s.value === grade.shift)?.label;
+
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname("Administración/Grados/Editar"));
-  }, [dispatch]);
+    dispatch(setPathname(`/Administración/Grados/${gradeName}/Editar`));
+  }, [dispatch, gradeName]);
 
   function onSubmit(values: z.infer<typeof GradeSchema>) {
     startTransition(() => {
@@ -232,7 +239,7 @@ export default function GradeEditForm({
                               key={preceptor.id}
                               value={preceptor.id || ""}
                             >
-                              {preceptor.name} {preceptor.lastName}
+                              {preceptor.email}
                             </SelectItem>
                           ))}
                         </SelectGroup>
