@@ -16,7 +16,10 @@ async function getData(studentId: string): Promise<Tutor[]> {
     },
   });
 
-  return tutors.map((t) => t.tutor);
+  return tutors.map((t) => ({
+    ...t.tutor,
+    phone: t.tutor.phone ?? undefined,
+  }));
 }
 
 export default async function TutorsPage({

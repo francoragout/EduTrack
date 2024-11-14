@@ -42,8 +42,9 @@ export const StudentsColumns: ColumnDef<Student>[] = [
         <div
           className={clsx(
             attendancePercentage === 100 && "text-green-500",
-            attendancePercentage < 100 && "text-yellow-500",
-            attendancePercentage <= 50 && "text-red-500",
+            attendancePercentage >= 50 && attendancePercentage < 100 && "text-yellow-500",
+            attendancePercentage < 50 && "text-red-500",
+            
             "font-medium"
           )}
         >

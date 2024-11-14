@@ -13,6 +13,7 @@ async function getData(gradeId: string): Promise<Student[]> {
     },
     include: {
       attendance: true,
+      tutors: true,
     },
   });
 
@@ -39,7 +40,28 @@ export default async function StudentsPage({
   if (!grade) {
     return <div>Grade not found</div>;
   }
+
+  // await db.student.createMany({
+  //   data: [
+  //     { name: "Juan", lastName: "Pérez", gradeId },
+  //     { name: "María", lastName: "Gómez", gradeId },
+  //     { name: "Carlos", lastName: "Rodríguez", gradeId },
+  //     { name: "Ana", lastName: "López", gradeId },
+  //     { name: "José", lastName: "Fernández", gradeId },
+  //     { name: "Lucía", lastName: "Martínez", gradeId },
+  //     { name: "Miguel", lastName: "García", gradeId },
+  //     { name: "Sofía", lastName: "Hernández", gradeId },
+  //     { name: "Pedro", lastName: "Ruiz", gradeId },
+  //     { name: "Camila", lastName: "Torres", gradeId },
+  //   ],
+  // });
+
   return (
-    <StudentsTable columns={StudentsColumns} data={data} gradeId={gradeId} grade={grade}/>
+    <StudentsTable
+      columns={StudentsColumns}
+      data={data}
+      gradeId={gradeId}
+      grade={grade}
+    />
   );
 }

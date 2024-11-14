@@ -5,6 +5,7 @@ import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { TutorSchema } from "@/lib/zod";
+import { TutorTableRowActions } from "./tutor-table-row-actions";
 
 type Tutor = z.infer<typeof TutorSchema>;
 
@@ -45,9 +46,15 @@ export const TutorsColumns: ColumnDef<Tutor>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
-
-  //   {
-  //     id: "actions",
-  //     cell: ({ row }) => <GradeTableRowActions row={row} />,
-  //   },
+  {
+    accessorKey: "phone",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Teléfono" />
+    ),
+    cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <TutorTableRowActions row={row} />,
+  },
 ];

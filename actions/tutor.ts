@@ -20,7 +20,7 @@ export const CreateTutor = async (
     };
   }
 
-  const { name, lastName, email } = validatedFields.data;
+  const { name, lastName, email, phone } = validatedFields.data;
 
   try {
     // Buscar si ya existe un tutor con ese correo
@@ -40,6 +40,7 @@ export const CreateTutor = async (
           name,
           lastName,
           email,
+          phone,
         },
       });
     }
@@ -82,3 +83,47 @@ export const CreateTutor = async (
     };
   }
 };
+
+export const UpdateTutor = async (
+  tutorId: string,
+  pathname: string,
+  values: z.infer<typeof TutorSchema>
+) => {
+  const validatedFields = TutorSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update Tutor.",
+    };
+  }
+
+  const { name, lastName, email, phone } = validatedFields.data;
+
+  try {
+    await db.tutor.update({
+      where: {
+        id: tutorId,
+      },
+      data: {
+        name,
+        lastName,
+        email,
+        phone,
+      },
+    });
+
+    revalidatePath(pathname);
+    return {
+      success: true,
+      message: "Tutor actualizado exitosamente",
+    };
+  } catch (error) {
+    console.error("Error updating tutor:", error);
+    return {
+      success: false,
+      message: "Error al actualizar tutor",
+    };
+  }
+}

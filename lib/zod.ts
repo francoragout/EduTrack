@@ -92,6 +92,7 @@ const TutorSchema = z.object({
   email: z.string().email({
     message: "Ingrese un email válido",
   }),
+  phone: z.string().optional(),
   studentId: z.string().optional(),
 });
 

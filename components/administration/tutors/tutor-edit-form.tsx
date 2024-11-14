@@ -24,20 +24,15 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { toast } from "sonner";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import { StudentSchema, TutorSchema } from "@/lib/zod";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { CreateTutor } from "@/actions/tutor";
 
-type Student = z.infer<typeof StudentSchema>;
-interface AttendanceCreateFormProps {
-  student: Student;
-}
+type Tutor = z.infer<typeof TutorSchema>;
 
-export default function TutorCreateForm({
-  student,
-}: AttendanceCreateFormProps) {
+export default function TutorEditForm({ tutor }: { tutor: Tutor }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -45,17 +40,17 @@ export default function TutorCreateForm({
   const form = useForm<z.infer<typeof TutorSchema>>({
     resolver: zodResolver(TutorSchema),
     defaultValues: {
-      name: "",
-      lastName: "",
-      email: "",
-      phone: "",
+        name: tutor.name,
+        lastName: tutor.lastName,
+        email: tutor.email,
+        phone: tutor.phone,
     },
   });
 
   function onSubmit(values: z.infer<typeof TutorSchema>) {
     startTransition(() => {
       setOpen(false);
-      CreateTutor(student.id || "", pathname, values).then((response) => {
+      CreateTutor(tutor.id || "", pathname, values).then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
@@ -69,14 +64,14 @@ export default function TutorCreateForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="h-8" size="sm">
-          <PlusCircle className="flex sm:hidden h-4 w-4" />
-          <span className="hidden sm:flex">Nuevo Tutor</span>
+        <Button variant="ghost" className="flex justify-start pl-2" size="sm">
+          <Pencil className="mr-2 h-4 w-4" />
+          <span>Editar</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Crear Tutor</DialogTitle>
+          <DialogTitle>Editar Tutor</DialogTitle>
           <DialogDescription>
             Utilice Tabs para navegar más rápido entre los campos.
           </DialogDescription>
@@ -149,7 +144,7 @@ export default function TutorCreateForm({
                   <FormLabel>Teléfono</FormLabel>
                   <FormControl>
                     <Input
-                    type="tel"
+                      type="tel"
                       placeholder="Teléfono (opcional)"
                       {...field}
                       disabled={isPending}

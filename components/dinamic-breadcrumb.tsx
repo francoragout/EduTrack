@@ -44,7 +44,9 @@ export default function DinamicBreadcrumb() {
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
-              {index < pathSegments.length - 1 && <BreadcrumbSeparator />}
+              {index < pathSegments.length - 1 && (
+                <BreadcrumbSeparator className="text-primary" />
+              )}
             </React.Fragment>
           );
         })}
