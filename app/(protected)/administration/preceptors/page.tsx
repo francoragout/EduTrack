@@ -1,40 +1,35 @@
-import { PreceptorsColumns } from "@/components/administration/preceptors/preceptors-columns";
-import { PreceptorsTable } from "@/components/administration/preceptors/preceptors-table";
+import { PreceptorsColumns } from "@/components/preceptors/preceptors-columns";
+import { PreceptorsTable } from "@/components/preceptors/preceptors-table";
 import { db } from "@/lib/db";
-import { PreceptorSchema } from "@/lib/zod";
+import { UserSchema } from "@/lib/zod";
+import { SessionProvider } from "next-auth/react";
 import { z } from "zod";
 
-type Preceptor = z.infer<typeof PreceptorSchema>;
+type User = z.infer<typeof UserSchema>;
 
-async function getData(): Promise<Preceptor[]> {
-  const preceptors = await db.preceptor.findMany({
+async function getData(): Promise<User[]> {
+  const preceptors = await db.user.findMany({
+    where: {
+      role: "EDITOR",
+    },
     include: {
-      grades: {
+      classrooms: {
         select: {
-          division: true,
           grade: true,
+          division: true,
           shift: true,
         },
       },
     },
   });
-  return preceptors.map((preceptor: Preceptor) =>
-    PreceptorSchema.parse(preceptor)
-  );
+  return preceptors.map((preceptor) => UserSchema.parse(preceptor));
 }
 
 export default async function PreceptorsPage() {
   const data = await getData();
-
-  // const createPreceptors = await db.preceptor.createMany({
-  //   data: [
-  //     { name: 'Laura', lastName: 'Castro', email: 'laura.castro@example.com' },
-  //     { name: 'Jorge', lastName: 'Méndez', email: 'jorge.mendez@example.com' },
-  //     { name: 'Carolina', lastName: 'Sosa', email: 'carolina.sosa@example.com' },
-  //     { name: 'Daniel', lastName: 'Iglesias', email: 'daniel.iglesias@example.com' },
-  //     { name: 'Lucía', lastName: 'Vega', email: 'lucia.vega@example.com' },
-  //   ],
-  // });
-
-  return <PreceptorsTable columns={PreceptorsColumns} data={data} />;
+  return (
+    <SessionProvider>
+      <PreceptorsTable columns={PreceptorsColumns} data={data} />
+    </SessionProvider>
+  );
 }

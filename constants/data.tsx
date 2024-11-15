@@ -65,3 +65,18 @@ export const shifts = [
     label: "Tarde",
   },
 ];
+
+export const roles = [
+  {
+    value: "ADMIN",
+    label: "Administrador",
+  },
+  {
+    value: "EDITOR",
+    label: "Preceptor",
+  },
+  {
+    value: "USER",
+    label: "Usuario",
+  },
+];

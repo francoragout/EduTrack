@@ -3,21 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
 }
 
 model User {
   id            String          @id @default(cuid())
-  name          String?
   email         String          @unique
+  name          String?
+  firstName     String?
+  lastName      String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  role          RoleEnum[]      @default([TUTOR])
+  role          Role            @default(USER)
   notifications Notifications[]
-  tutor         Tutor?
-  preceptor     Preceptor?
+  classrooms    Classroom[]
+  students      UserOnStudent[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 }
@@ -49,64 +51,45 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-model Tutor {
-  id       String           @id @default(cuid())
-  name     String
-  lastName String
-  email    String  
-  phone    String?         
-  user     User?            @relation(fields: [userId], references: [id])
-  userId   String?          @unique
-  students TutorOnStudent[]
-}
-
 model Student {
-  id         String           @id @default(cuid())
-  name       String
-  lastName   String
-  tutors     TutorOnStudent[]
-  attendance Attendance[]
-  grade      Grade            @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  gradeId    String
+  id          String          @id @default(cuid())
+  name        String
+  lastName    String
+  attendance  Attendance[]
+  classroom   Classroom       @relation(fields: [classroomId], references: [id])
+  classroomId String
+  users       UserOnStudent[]
 }
 
-model TutorOnStudent {
-  tutor     Tutor   @relation(fields: [tutorId], references: [id])
-  tutorId   String
-  student   Student @relation(fields: [studentId], references: [id])
+model UserOnStudent {
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String
 
-  @@id([tutorId, studentId])
+  @@id([userId, studentId])
 }
 
-model Preceptor {
-  id       String  @id @default(cuid())
-  name     String
-  lastName String
-  email    String
-  user     User?   @relation(fields: [userId], references: [id])
-  userId   String? @unique
-  grades   Grade[]
-}
+model Classroom {
+  id       String    @id @default(cuid())
+  grade    Grade
+  division Division
+  shift    Shift
+  students Student[]
+  user    User?      @relation(fields: [userId], references: [id])
+  userId   String?
 
-model Grade {
-  id          String       @id @default(cuid())
-  grade       GradeEnum
-  division    DivisionEnum
-  shift       ShiftEnum
-  students    Student[]
-  preceptor   Preceptor?   @relation(fields: [preceptorId], references: [id])
-  preceptorId String?
+  @@unique([grade, division, shift])
 }
 
 model Attendance {
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  status    StatusEnum
-  student   Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  status    Status
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String
 
-  // @@unique([createdAt, studentId])
+  @@unique([createdAt, studentId])
 }
 
 model Notifications {
@@ -118,14 +101,7 @@ model Notifications {
   userId    String
 }
 
-enum DivisionEnum {
-  A
-  B
-  C
-  D
-}
-
-enum GradeEnum {
+enum Grade {
   FIRST
   SECOND
   THIRD
@@ -134,18 +110,25 @@ enum GradeEnum {
   SIXTH
 }
 
-enum ShiftEnum {
+enum Division {
+  A
+  B
+  C
+  D
+}
+
+enum Shift {
   MORNING
   AFTERNOON
 }
 
-enum StatusEnum {
+enum Status {
   ABSENT
   LATE
 }
 
-enum RoleEnum {
+enum Role {
   ADMIN
-  PRECEPTOR
-  TUTOR
+  EDITOR
+  USER
 }

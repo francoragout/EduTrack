@@ -18,7 +18,6 @@ import { GalleryVerticalEnd, MoonIcon, SunIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { NavUser } from "./nav-user";
 import { Badge } from "./ui/badge";
-import { ModeToggle } from "./theme-toggle-button";
 import { useTheme } from "next-themes";
 
 const data = {
@@ -34,14 +33,18 @@ const data = {
           title: "Preceptores",
           url: "/administration/preceptors",
         },
+        {
+          title: "Tutores",
+          url: "/administration/tutors",
+        }
       ],
     },
     {
       title: "Institución",
       items: [
         {
-          title: "Grados",
-          url: "/administration/grades",
+          title: "Aulas",
+          url: "/administration/classrooms",
         },
       ],
     },

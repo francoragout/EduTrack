@@ -1,26 +1,26 @@
-import PreceptorEditForm from "@/components/administration/preceptors/preceptor-edit-form";
+import { auth } from "@/auth";
+import PreceptorEditForm from "@/components/preceptors/preceptor-edit-form";
 import { db } from "@/lib/db";
-export default async function PreceptorEditPage({
+
+export default async function PreceptorsEditPage({
   params,
 }: {
   params: Promise<{ preceptorId: string }>;
 }) {
   const preceptorId = (await params).preceptorId;
-  const preceptor = await db.preceptor.findUnique({
+  const preceptor = await db.user.findUnique({
     where: {
       id: preceptorId,
     },
     select: {
       id: true,
-      name: true,
+      firstName: true,
       lastName: true,
+      role: true,
       email: true,
-      grades: true,
     },
   });
-  if (!preceptor) {
-    return <div>Preceptor not found</div>;
-  }
 
-  return <PreceptorEditForm preceptor={preceptor} />;
+  const session = await auth();
+  return <PreceptorEditForm preceptor={preceptor} session={session} />;
 }
