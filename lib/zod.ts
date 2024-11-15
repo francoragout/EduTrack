@@ -41,6 +41,7 @@ const UserSchema: z.ZodType<any> = z.lazy(() =>
       message: "Seleccionar un rol",
     }),
     image: z.string().optional(),
+    createdAt: z.date().optional(),
     classrooms: z.array(ClassroomSchema).optional(),
   })
 );
@@ -56,7 +57,7 @@ const AttendanceSchema = z.object({
 // Student schema
 const StudentSchema = z.object({
   id: z.string().optional(),
-  name: z
+  firstName: z
     .string()
     .min(1, {
       message: "El nombre es requerido",
@@ -73,7 +74,7 @@ const StudentSchema = z.object({
       message: "El apellido debe tener menos de 30 caracteres",
     }),
   attendance: z.array(AttendanceSchema).optional(),
-  gradeId: z.string().optional(),
+  classroomId: z.string().optional(),
 });
 
 // UserOnStudent schema

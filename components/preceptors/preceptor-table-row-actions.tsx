@@ -36,6 +36,7 @@ export function PreceptorTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const preceptor = UserSchema.parse(row.original);
   const { data: session } = useSession();
+  console.log(session);
 
   const handleDelete = async () => {
     DeletePreceptor(preceptor.id).then((response) => {

@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const CreateStudent = async (
   values: z.infer<typeof StudentSchema>,
-  gradeId: string
+  classroomId: string
 ) => {
   const validatedFields = StudentSchema.safeParse(values);
 
@@ -19,22 +19,22 @@ export const CreateStudent = async (
     };
   }
 
-  const { name, lastName } = validatedFields.data;
+  const { firstName, lastName } = validatedFields.data;
 
   try {
     await db.student.create({
       data: {
-        name,
+        firstName,
         lastName,
-        grade: {
+        classroom: {
           connect: {
-            id: gradeId,
+            id: classroomId,
           },
         },
       },
     });
 
-    revalidatePath(`/administration/grades/${gradeId}/students`);
+    revalidatePath(`/administration/grades/${classroomId}/students`);
     return {
       success: true,
       message: "Alumno creado exitosamente",

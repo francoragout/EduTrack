@@ -4,22 +4,23 @@ import { db } from "@/lib/db";
 export default async function StudentCreatePage({
   params,
 }: {
-  params: Promise<{ gradeId: string }>;
+  params: Promise<{ classroomId: string }>;
 }) {
-  const gradeId = (await params).gradeId;
-  const grade = await db.grade.findFirst({
+  const classroomId = (await params).classroomId;
+  const classroom = await db.classroom.findFirst({
     where: {
-      id: gradeId,
+      id: classroomId,
     },
     select: {
+      id: true,
       grade: true,
       division: true,
       shift: true,
     },
   });
 
-  if (!grade) {
-    return <div>Grade not found</div>;
+  if (!classroom) {
+    return <div>Classroom not found</div>;
   }
-  return <StudentCreateForm gradeId={gradeId} grade={grade} />;
+  return <StudentCreateForm classroom={classroom} />
 }

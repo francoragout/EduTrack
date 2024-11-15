@@ -6,29 +6,31 @@ import { z } from "zod";
 
 type Student = z.infer<typeof StudentSchema>;
 
-async function getData(gradeId: string): Promise<Student[]> {
+async function getData(classroomId: string): Promise<Student[]> {
   const students = await db.student.findMany({
     where: {
-      gradeId,
+      classroomId,
     },
-    include: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
       attendance: true,
-      tutors: true,
     },
   });
 
-  return students.map((student: Student) => StudentSchema.parse(student));
+  return students.map((student) => StudentSchema.parse(student));
 }
 
 export default async function StudentsPage({
   params,
 }: {
-  params: Promise<{ gradeId: string }>;
+  params: Promise<{ classroomId: string }>;
 }) {
-  const gradeId = (await params).gradeId;
-  const grade = await db.grade.findUnique({
+  const classroomId = (await params).classroomId;
+  const classroom = await db.classroom.findUnique({
     where: {
-      id: gradeId,
+      id: classroomId,
     },
     select: {
       grade: true,
@@ -36,23 +38,20 @@ export default async function StudentsPage({
       shift: true,
     },
   });
-  const data = await getData(gradeId);
-  if (!grade) {
-    return <div>Grade not found</div>;
+
+  if (!classroom) {
+    return <div>Classroom not found</div>;
   }
+
+  const data = await getData(classroomId);
 
   // await db.student.createMany({
   //   data: [
-  //     { name: "Juan", lastName: "Pérez", gradeId },
-  //     { name: "María", lastName: "Gómez", gradeId },
-  //     { name: "Carlos", lastName: "Rodríguez", gradeId },
-  //     { name: "Ana", lastName: "López", gradeId },
-  //     { name: "José", lastName: "Fernández", gradeId },
-  //     { name: "Lucía", lastName: "Martínez", gradeId },
-  //     { name: "Miguel", lastName: "García", gradeId },
-  //     { name: "Sofía", lastName: "Hernández", gradeId },
-  //     { name: "Pedro", lastName: "Ruiz", gradeId },
-  //     { name: "Camila", lastName: "Torres", gradeId },
+  //     { firstName: 'Juan', lastName: 'Pérez', classroomId },
+  //     { firstName: 'María', lastName: 'González', classroomId },
+  //     { firstName: 'Carlos', lastName: 'Ramírez', classroomId },
+  //     { firstName: 'Ana', lastName: 'Martínez', classroomId },
+  //     { firstName: 'Lucía', lastName: 'Fernández', classroomId },
   //   ],
   // });
 
@@ -60,8 +59,8 @@ export default async function StudentsPage({
     <StudentsTable
       columns={StudentsColumns}
       data={data}
-      gradeId={gradeId}
-      grade={grade}
+      classroom={classroom}
+      classroomId={classroomId}
     />
   );
 }

@@ -6,10 +6,35 @@ import { StudentsTableRowActions } from "./student-table-row-actions";
 import { z } from "zod";
 import { StudentSchema } from "@/lib/zod";
 import clsx from "clsx";
+import { Checkbox } from "../ui/checkbox";
 
 type Student = z.infer<typeof StudentSchema>;
 
 export const StudentsColumns: ColumnDef<Student>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "lastName",
     header: ({ column }) => (
@@ -42,9 +67,11 @@ export const StudentsColumns: ColumnDef<Student>[] = [
         <div
           className={clsx(
             attendancePercentage === 100 && "text-green-500",
-            attendancePercentage >= 50 && attendancePercentage < 100 && "text-yellow-500",
+            attendancePercentage >= 50 &&
+              attendancePercentage < 100 &&
+              "text-yellow-500",
             attendancePercentage < 50 && "text-red-500",
-            
+
             "font-medium"
           )}
         >

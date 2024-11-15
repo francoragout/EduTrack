@@ -30,22 +30,22 @@ import { StudentsTableToolbar } from "./students-table-toolbar";
 import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { z } from "zod";
-import { GradeSchema } from "@/lib/zod";
 import { divisions, grades, shifts } from "@/constants/data";
+import { ClassroomSchema } from "@/lib/zod";
 
-type Grade = z.infer<typeof GradeSchema>;
+type Classroom = z.infer<typeof ClassroomSchema>;
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  gradeId: string;
-  grade: Grade;
+  classroom: Classroom;
+  classroomId: string;
 }
 
 export function StudentsTable<TData, TValue>({
   columns,
   data,
-  gradeId,
-  grade,
+  classroom,
+  classroomId,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -82,21 +82,21 @@ export function StudentsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const gradeName =
-    grades.find((g) => g.value === grade.grade)?.label +
+  const classroomName =
+    grades.find((g) => g.value === classroom.grade)?.label +
     " " +
-    divisions.find((d) => d.value === grade.division)?.label +
+    divisions.find((d) => d.value === classroom.division)?.label +
     " " +
-    shifts.find((s) => s.value === grade.shift)?.label;
+    shifts.find((s) => s.value === classroom.shift)?.label;
 
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(setPathname(`/Administración/Grados/${gradeName}/Alumnos`));
-  }, [dispatch, gradeName]);
+    dispatch(setPathname(`/Administración/Aulas/${classroomName}/Alumnos`));
+  }, [dispatch, classroomName]);
 
   return (
     <div className="space-y-4">
-      <StudentsTableToolbar table={table} gradeId={gradeId} />
+      <StudentsTableToolbar table={table} classroomId={classroomId} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

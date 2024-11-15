@@ -16,7 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { GradeSchema, StudentSchema } from "@/lib/zod";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -29,48 +28,47 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { divisions, grades, shifts } from "@/constants/data";
+import { ClassroomSchema, StudentSchema } from "@/lib/zod";
 
-type Grade = z.infer<typeof GradeSchema>;
+type Classroom = z.infer<typeof ClassroomSchema>;
 
 interface StudentCreateFormProps {
-  gradeId: string;
-  grade: Grade;
+  classroom: Classroom;
 }
 
 export default function StudentCreateForm({
-  gradeId,
-  grade,
+  classroom,
 }: StudentCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof StudentSchema>>({
     resolver: zodResolver(StudentSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
       lastName: "",
     },
   });
 
-  const gradeName =
-    grades.find((g) => g.value === grade.grade)?.label +
+  const classroomName =
+    grades.find((g) => g.value === classroom.grade)?.label +
     " " +
-    divisions.find((d) => d.value === grade.division)?.label +
+    divisions.find((d) => d.value === classroom.division)?.label +
     " " +
-    shifts.find((s) => s.value === grade.shift)?.label;
+    shifts.find((s) => s.value === classroom.shift)?.label;
 
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(
-      setPathname(`Administración/Grados/${gradeName}/Estudiantes/Crear`)
+      setPathname(`Administración/Grados/${classroomName}/Alumnos/Crear`)
     );
-  }, [dispatch, gradeName]);
+  }, [dispatch, classroomName]);
 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
-      CreateStudent(values, gradeId).then((response) => {
+      CreateStudent(values, classroom.id || "").then((response) => {
         if (response.success) {
           toast.success(response.message);
-          router.push(`/administration/grades/${gradeId}/students`);
+          router.push(`/administration/classrooms/${classroom.id}/students`);
         } else {
           toast.error(response.message);
         }
@@ -92,7 +90,7 @@ export default function StudentCreateForm({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Nombre</FormLabel>
@@ -125,7 +123,6 @@ export default function StudentCreateForm({
                   </FormItem>
                 )}
               />
-
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <Button
@@ -135,7 +132,9 @@ export default function StudentCreateForm({
                 className="h-8"
                 disabled={isPending}
               >
-                <Link href={`/administration/grades/${gradeId}/students`}>
+                <Link
+                  href={`/administration/classroom/${classroom.id}/students`}
+                >
                   Cancelar
                 </Link>
               </Button>

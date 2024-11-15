@@ -79,11 +79,14 @@ export function ClassroomTableRowActions<TData>({
 
           {session?.user?.role === "ADMIN" ? (
             <Button
+              asChild
               variant="ghost"
               className="flex justify-start pl-2"
               size="sm"
             >
-              <Link href={`/administration/classrooms/${classroom.id}/edit`}>
+              <Link
+                href={`/administration/classrooms/${classroom.id}/edit`}
+              >
                 <Pencil className="mr-2 h-4 w-4" />
                 <span>Editar</span>
               </Link>

@@ -28,6 +28,7 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
+import SignOut from "./signout";
 
 export function NavUser({ session }: { session: any }) {
   const { isMobile } = useSidebar();
@@ -107,10 +108,7 @@ export function NavUser({ session }: { session: any }) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              <Button onClick={() => signOut()}>Sign Out</Button>
-            </DropdownMenuItem>
+            <SignOut />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -29,7 +29,7 @@ export default async function ClassroomsPage() {
   const data = await getData();
   return (
     <SessionProvider>
-      <ClassroomsTable columns={ClassroomsColumns} data={data} />;
+      <ClassroomsTable columns={ClassroomsColumns} data={data} />
     </SessionProvider>
   );
 }
