@@ -133,7 +133,7 @@ export default function StudentCreateForm({
                 disabled={isPending}
               >
                 <Link
-                  href={`/administration/classroom/${classroom.id}/students`}
+                  href={`/administration/classrooms/${classroom.id}/students`}
                 >
                   Cancelar
                 </Link>

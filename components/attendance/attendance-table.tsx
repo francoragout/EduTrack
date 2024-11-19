@@ -29,25 +29,25 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { AttendanceTableToolbar } from "./attendance-table-toolbar";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
-import { GradeSchema, StudentSchema } from "@/lib/zod";
+import { ClassroomSchema, StudentSchema } from "@/lib/zod";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { divisions, grades, shifts } from "@/constants/data";
 
 type Student = z.infer<typeof StudentSchema>;
-type Grade = z.infer<typeof GradeSchema>;
+type Classroom = z.infer<typeof ClassroomSchema>;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   student: Student;
-  grade: Grade;
+  classroom: Classroom;
 }
 
 export function AttendanceTable<TData, TValue>({
   columns,
   data,
   student,
-  grade,
+  classroom,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -79,28 +79,24 @@ export function AttendanceTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  const gradeName =
-    grades.find((g) => g.value === grade.grade)?.label +
+  const classroomName =
+    grades.find((g) => g.value === classroom.grade)?.label +
     " " +
-    divisions.find((d) => d.value === grade.division)?.label +
+    divisions.find((d) => d.value === classroom.division)?.label +
     " " +
-    shifts.find((s) => s.value === grade.shift)?.label;
-  console.log(student);
+    shifts.find((s) => s.value === classroom.shift)?.label;
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(
       setPathname(
-        `/Administración/Grados/${gradeName}/Alumnos/${student.name} ${student.lastName}/Asistencia`
+        `/Administración/classrooms/${classroomName}/Alumnos/${student.firstName} ${student.lastName}/Asistencia`
       )
     );
-  }, [dispatch, gradeName, student.name, student.lastName]);
+  }, [dispatch, classroomName, student]);
 
   return (
     <div className="space-y-4">
-      <AttendanceTableToolbar
-        table={table}
-        student={student}
-      />
+      <AttendanceTableToolbar table={table} student={student} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

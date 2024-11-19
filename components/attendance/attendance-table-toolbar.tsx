@@ -1,7 +1,6 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-import AttendanceCreateForm from "./attendance-create-form";
 import { DataTableFacetedFilter } from "@/components/data-table-faceted-filter";
 import { statuses } from "@/constants/data";
 import { z } from "zod";
@@ -27,9 +26,6 @@ export function AttendanceTableToolbar<TData>({
             options={statuses}
           />
         )}
-      </div>
-      <div className="flex space-x-4">
-        <AttendanceCreateForm student={student} />
       </div>
     </div>
   );

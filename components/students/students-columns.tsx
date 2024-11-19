@@ -43,11 +43,11 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     cell: ({ row }) => <div>{row.getValue("lastName")}</div>,
   },
   {
-    accessorKey: "name",
+    accessorKey: "firstName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Nombre" />
     ),
-    cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    cell: ({ row }) => <div>{row.getValue("firstName")}</div>,
   },
   {
     accessorKey: "attendance",

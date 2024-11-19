@@ -21,15 +21,29 @@ async function getData(studentId: string): Promise<Attendance[]> {
 export default async function AttendancePage({
   params,
 }: {
-  params: Promise<{ studentId: string; gradeId: string }>;
+  params: Promise<{ studentId: string; classroomId: string }>;
 }) {
+  const resolvedParams = await params;
+  console.log('Resolved Params:', resolvedParams);
+
+  
+
+  
+
   const studentId = (await params).studentId;
   const data = await getData(studentId);
 
-  const gradeId = (await params).gradeId;
-  const grade = await db.grade.findUnique({
+  
+
+  
+  const classroomId = (await params).classroomId;
+
+  console.log('Student ID:', studentId);
+  console.log('Classroom ID:', classroomId);
+  
+  const classroom = await db.classroom.findUnique({
     where: {
-      id: gradeId,
+      id: classroomId,
     },
     select: {
       grade: true,
@@ -38,7 +52,7 @@ export default async function AttendancePage({
     },
   });
 
-  if (!grade) {
+  if (!classroom) {
     return <div>Grade not found</div>;
   }
 
@@ -48,7 +62,7 @@ export default async function AttendancePage({
     },
     select: {
       id: true,
-      name: true,
+      firstName: true,
       lastName: true,
     },
   });
@@ -62,7 +76,7 @@ export default async function AttendancePage({
       columns={AttendanceColumns}
       data={data}
       student={student}
-      grade={grade}
+      classroom={classroom}
     />
   );
 }

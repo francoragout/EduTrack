@@ -24,7 +24,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { StudentSchema } from "@/lib/zod";
 import Link from "next/link";
-import { CalendarCheck2, Pencil, Trash, User, Users } from "lucide-react";
+import {
+  Calendar,
+  Pencil,
+  Trash,
+  Users,
+} from "lucide-react";
 import { DeleteStudent } from "@/actions/student";
 import { toast } from "sonner";
 
@@ -38,7 +43,7 @@ export function StudentsTableRowActions<TData>({
   const student = StudentSchema.parse(row.original);
 
   const handleDelete = async () => {
-    DeleteStudent(student.id ?? "", student.gradeId || "").then((response) => {
+    DeleteStudent(student.id || "", student.classroomId || "").then((response) => {
       if (response.success) {
         toast.success(response.message);
       } else {
@@ -69,9 +74,9 @@ export function StudentsTableRowActions<TData>({
             size="sm"
           >
             <Link
-              href={`/administration/grades/${student.gradeId}/students/${student.id}/attendance`}
+              href={`/administration/classrooms/${student.classroomId}/students/${student.id}/attendance`}
             >
-              <CalendarCheck2 className="mr-2 h-4 w-4" />
+              <Calendar className="mr-2 h-4 w-4" />
               <span>Asistencia</span>
             </Link>
           </Button>
@@ -83,7 +88,7 @@ export function StudentsTableRowActions<TData>({
             size="sm"
           >
             <Link
-              href={`/administration/grades/${student.gradeId}/students/${student.id}/tutors`}
+              href={`/administration/classrooms/${student.classroomId}/students/${student.id}/tutors`}
             >
               <Users className="mr-2 h-4 w-4" />
               <span>Tutores</span>
@@ -97,7 +102,7 @@ export function StudentsTableRowActions<TData>({
             size="sm"
           >
             <Link
-              href={`/administration/grades/${student.gradeId}/students/${student.id}/edit`}
+              href={`/administration/classrooms/${student.classroomId}/students/${student.id}/edit`}
             >
               <Pencil className="mr-2 h-4 w-4" />
               <span>Editar</span>
@@ -126,7 +131,7 @@ export function StudentsTableRowActions<TData>({
                   {
                     <span className="text-primary">
                       {" "}
-                      &apos;{student.name} {student.lastName}&apos;
+                      &apos;{student.firstName} {student.lastName}&apos;
                     </span>
                   }{" "}
                   y todos los datos asociados de nuestros servidores.

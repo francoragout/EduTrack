@@ -63,7 +63,7 @@ export const UpdateStudent = async (
     };
   }
 
-  const { name, lastName } = validatedFields.data;
+  const { firstName, lastName } = validatedFields.data;
 
   try {
     await db.student.update({
@@ -71,7 +71,7 @@ export const UpdateStudent = async (
         id: studentId,
       },
       data: {
-        name,
+        firstName,
         lastName,
       },
     });
@@ -90,7 +90,7 @@ export const UpdateStudent = async (
   }
 };
 
-export const DeleteStudent = async (id: string, gradeId: string) => {
+export const DeleteStudent = async (id: string, classroomId: string) => {
   try {
     await db.student.delete({
       where: {
@@ -98,10 +98,10 @@ export const DeleteStudent = async (id: string, gradeId: string) => {
       },
     });
 
-    revalidatePath(`/administration/grades/${gradeId}/students`);
+    revalidatePath(`/administration/grades/${classroomId}/students`);
     return {
       success: true,
-      message: "Alumno eliminado exitosamente",
+      message: "Alumno eliminado",
     };
   } catch (error) {
     console.log(error);

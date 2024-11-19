@@ -1,36 +1,23 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { AttendanceSchema } from "@/lib/zod";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
-export const CreateAttendance = async (
-  id: string,
-  pathname: string,
-  values: z.infer<typeof AttendanceSchema>
+export const CreateAbsent = async (
+  selectedRows: string[],
+  classroomId: string
 ) => {
-  const validatedFields = AttendanceSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create attendance.",
-    };
-  }
-
-  const { status } = validatedFields.data;
 
   try {
-    await db.attendance.create({
-      data: {
-        status,
-        studentId: id,
-      },
+    await db.attendance.createMany({
+      data: selectedRows.map((studentId) => ({
+        studentId,
+        status: "ABSENT",
+      })),
     });
 
-    revalidatePath(pathname);
+    revalidatePath(`/administration/classrooms/${classroomId}/students`);
+
     return {
       success: true,
       message: "Asistencia creada exitosamente",
