@@ -89,7 +89,7 @@ export function AttendanceTable<TData, TValue>({
   React.useEffect(() => {
     dispatch(
       setPathname(
-        `/Administración/classrooms/${classroomName}/Alumnos/${student.firstName} ${student.lastName}/Asistencia`
+        `/Administración/Aulas/${classroomName}/Alumnos/${student.firstName} ${student.lastName}/Asistencia`
       )
     );
   }, [dispatch, classroomName, student]);

@@ -34,18 +34,17 @@ import { divisions, grades, shifts } from "@/constants/data";
 import { ClassroomSchema } from "@/lib/zod";
 
 type Classroom = z.infer<typeof ClassroomSchema>;
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   classroom: Classroom;
-  classroomId: string;
 }
 
 export function StudentsTable<TData, TValue>({
   columns,
   data,
   classroom,
-  classroomId,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -82,6 +81,8 @@ export function StudentsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  console.log(data);
+
   const classroomName =
     grades.find((g) => g.value === classroom.grade)?.label +
     " " +
@@ -96,7 +97,7 @@ export function StudentsTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <StudentsTableToolbar table={table} classroomId={classroomId} />
+      <StudentsTableToolbar table={table} classroom={classroom}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

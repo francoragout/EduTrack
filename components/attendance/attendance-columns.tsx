@@ -48,7 +48,6 @@ export const AttendanceColumns: ColumnDef<Attendance>[] = [
       return value.includes(row.getValue(id));
     },
   },
-
   {
     id: "actions",
     cell: ({ row }) => <AttendanceTableRowActions row={row} />,

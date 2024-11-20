@@ -64,16 +64,16 @@ export const StudentsColumns: ColumnDef<Student>[] = [
         100 - (totalAbsences / totalAllowedAbsences) * 100;
 
       return (
-        <div
-          className={clsx(
-            attendancePercentage === 100 && "text-green-500",
-            attendancePercentage >= 50 &&
-              attendancePercentage < 100 &&
-              "text-yellow-500",
-            attendancePercentage < 50 && "text-red-500",
+        <div 
+          // className={clsx(
+          //   attendancePercentage === 100 && "text-green-500",
+          //   attendancePercentage >= 50 &&
+          //     attendancePercentage < 100 &&
+          //     "text-yellow-500",
+          //   attendancePercentage < 50 && "text-red-500",
 
-            "font-medium"
-          )}
+          //   "font-medium"
+          // )}
         >
           {attendancePercentage.toFixed(1)}%
         </div>

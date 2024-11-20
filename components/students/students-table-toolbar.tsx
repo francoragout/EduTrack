@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { CalendarX2, ClockAlert, PlusCircle, Trash } from "lucide-react";
 import { z } from "zod";
-import { CreateAbsent } from "@/actions/attendance";
+import { CreateAbsent, createLate } from "@/actions/attendance";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -20,15 +20,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ClassroomSchema } from "@/lib/zod";
 
+type Classroom = z.infer<typeof ClassroomSchema>;
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
-  classroomId: string;
+  classroom: Classroom;
 }
 
 export function StudentsTableToolbar<TData>({
   table,
-  classroomId,
+  classroom,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const isSomeRowsSelected =
@@ -39,9 +41,10 @@ export function StudentsTableToolbar<TData>({
     const studentIds = selectedRows.map(
       (row) => (row.original as { id: string }).id
     );
-    CreateAbsent(studentIds, classroomId).then((response) => {
+    CreateAbsent(studentIds, classroom.id || "").then((response) => {
       if (response.success) {
         toast.success(response.message);
+        table.resetRowSelection();
       } else {
         toast.error(response.message);
       }
@@ -50,8 +53,17 @@ export function StudentsTableToolbar<TData>({
 
   const handleLateSelected = () => {
     const selectedRows = table.getSelectedRowModel().rows;
-
-    console.log("Selected rows to delete:", selectedRows);
+    const studentIds = selectedRows.map(
+      (row) => (row.original as { id: string }).id
+    );
+    createLate(studentIds, classroom.id || "").then((response) => {
+      if (response.success) {
+        toast.success(response.message);
+        table.resetRowSelection();
+      } else {
+        toast.error(response.message);
+      }
+    });
   };
 
   return (
@@ -83,7 +95,11 @@ export function StudentsTableToolbar<TData>({
           <>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 flex border-dashed"
+                >
                   <CalendarX2 className="flex h-4 w-4" />
                   <span className="hidden sm:flex">Ausente</span>
                 </Button>
@@ -91,31 +107,29 @@ export function StudentsTableToolbar<TData>({
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Confirmar ausencia de los siguientes alumnos:
+                    Confirmar inasistencia de:
                   </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    <div className="flex flex-col">
-                      {table.getSelectedRowModel().rows.map((row) => (
-                        <span key={row.id}>
-                          {
-                            (
-                              row.original as {
-                                firstName: string;
-                                lastName: string;
-                              }
-                            ).firstName
-                          }{" "}
-                          {
-                            (
-                              row.original as {
-                                firstName: string;
-                                lastName: string;
-                              }
-                            ).lastName
-                          }
-                        </span>
-                      ))}
-                    </div>
+                  <AlertDialogDescription className="flex flex-col">
+                    {table.getSelectedRowModel().rows.map((row) => (
+                      <span key={row.id}>
+                        {
+                          (
+                            row.original as {
+                              firstName: string;
+                              lastName: string;
+                            }
+                          ).firstName
+                        }{" "}
+                        {
+                          (
+                            row.original as {
+                              firstName: string;
+                              lastName: string;
+                            }
+                          ).lastName
+                        }
+                      </span>
+                    ))}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -126,20 +140,58 @@ export function StudentsTableToolbar<TData>({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 flex"
-              onClick={handleLateSelected}
-            >
-              <ClockAlert className="flex h-4 w-4" />
-              <span className="hidden sm:flex">Tarde</span>
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 flex border-dashed"
+                >
+                  <ClockAlert className="flex h-4 w-4" />
+                  <span className="hidden sm:flex">Tarde</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Confirmar llegada tarde de:
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="flex flex-col">
+                    {table.getSelectedRowModel().rows.map((row) => (
+                      <span key={row.id}>
+                        {
+                          (
+                            row.original as {
+                              firstName: string;
+                              lastName: string;
+                            }
+                          ).firstName
+                        }{" "}
+                        {
+                          (
+                            row.original as {
+                              firstName: string;
+                              lastName: string;
+                            }
+                          ).lastName
+                        }
+                      </span>
+                    ))}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleLateSelected}>
+                    Continuar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </>
         )}
         <Button size="sm" className="h-8 flex" asChild>
           <Link
-            href={`/administration/classrooms/${classroomId}/students/create`}
+            href={`/administration/classrooms/${classroom.id}/students/create`}
           >
             <PlusCircle className="flex sm:hidden h-4 w-4" />
             <span className="hidden sm:flex">Nuevo alumno</span>

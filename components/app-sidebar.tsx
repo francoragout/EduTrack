@@ -19,6 +19,7 @@ import { usePathname } from "next/navigation";
 import { NavUser } from "./nav-user";
 import { Badge } from "./ui/badge";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 const data = {
   navMain: [
@@ -36,7 +37,7 @@ const data = {
         {
           title: "Tutores",
           url: "/administration/tutors",
-        }
+        },
       ],
     },
     {
@@ -67,10 +68,14 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <GalleryVerticalEnd className="size-4" />
-              </div>
-              <div className="flex flex-col gap-0.5 leading-none">
+              <Image
+                src="/EduTrackBook.svg"
+                width={48}
+                height={48}
+                alt="EduTrack logo"
+                className="invert brightness-200 dark:brightness-0 -ml-1.5"
+              />
+              <div className="flex flex-col gap-0.5 leading-none ms-1">
                 <span className="font-semibold">EduTrack</span>
               </div>
             </SidebarMenuButton>

@@ -18,9 +18,9 @@ export default async function AdministrationLayout({
 }: AdministratioLayoutProps) {
   const session = await auth();
 
-  if (session?.user?.role !== "ADMIN") {
-    return <div>You are not admin</div>;
-  }
+  // if (session?.user?.role !== "ADMIN") {
+  //   return <div>You are not admin</div>;
+  // }
 
   return (
     <SidebarProvider>

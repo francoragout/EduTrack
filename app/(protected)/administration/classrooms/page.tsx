@@ -21,6 +21,9 @@ async function getData(): Promise<Classroom[]> {
         },
       },
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
   return classrooms.map((classroom) => ClassroomSchema.parse(classroom));
 }

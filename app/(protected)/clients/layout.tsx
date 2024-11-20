@@ -7,8 +7,8 @@ interface ClientsLayoutProps {
 export default async function ClientsLayout({ children }: ClientsLayoutProps) {
   const session = await auth();
 
-  if (session?.user?.role !== "USER") {
-    return <div>You are not user</div>;
-  }
+  // if (session?.user?.role !== "USER") {
+  //   return <div>You are not user</div>;
+  // }
   return <>{children}</>;
 }

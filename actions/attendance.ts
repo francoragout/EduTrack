@@ -20,16 +20,40 @@ export const CreateAbsent = async (
 
     return {
       success: true,
-      message: "Asistencia creada exitosamente",
+      message: "Inasistencia creada exitosamente",
+    };
+  } catch (error) {
+    console.error("Error creating absent:", error);
+    return {
+      success: false,
+      message: "Error al crear inasistencia",
+    };
+  }
+};
+
+export const createLate = async (selectedRows: string[], classroomId: string) => {
+  try {
+    await db.attendance.createMany({
+      data: selectedRows.map((studentId) => ({
+        studentId,
+        status: "LATE",
+      })),
+    });
+
+    revalidatePath(`/administration/classrooms/${classroomId}/students`);
+
+    return {
+      success: true,
+      message: "Llegada tarde creada exitosamente",
     };
   } catch (error) {
     console.error("Error creating attendance:", error);
     return {
       success: false,
-      message: "Error al crear asistencia",
+      message: "Error al crear llegada tarde",
     };
   }
-};
+}
 
 export const DeleteAttendance = async (id: string, pathname: string) => {
   try {

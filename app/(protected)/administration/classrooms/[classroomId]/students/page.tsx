@@ -16,6 +16,7 @@ async function getData(classroomId: string): Promise<Student[]> {
       firstName: true,
       lastName: true,
       attendance: true,
+      classroomId: true,
     },
   });
 
@@ -28,11 +29,13 @@ export default async function StudentsPage({
   params: Promise<{ classroomId: string }>;
 }) {
   const classroomId = (await params).classroomId;
+  const data = await getData(classroomId);
   const classroom = await db.classroom.findUnique({
     where: {
       id: classroomId,
     },
     select: {
+      id: true,
       grade: true,
       division: true,
       shift: true,
@@ -43,24 +46,11 @@ export default async function StudentsPage({
     return <div>Classroom not found</div>;
   }
 
-  const data = await getData(classroomId);
-
-  // await db.student.createMany({
-  //   data: [
-  //     { firstName: 'Juan', lastName: 'Pérez', classroomId },
-  //     { firstName: 'María', lastName: 'González', classroomId },
-  //     { firstName: 'Carlos', lastName: 'Ramírez', classroomId },
-  //     { firstName: 'Ana', lastName: 'Martínez', classroomId },
-  //     { firstName: 'Lucía', lastName: 'Fernández', classroomId },
-  //   ],
-  // });
-
   return (
     <StudentsTable
       columns={StudentsColumns}
       data={data}
       classroom={classroom}
-      classroomId={classroomId}
     />
   );
 }

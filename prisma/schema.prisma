@@ -78,6 +78,7 @@ model Classroom {
   students Student[]
   user    User?      @relation(fields: [userId], references: [id])
   userId   String?
+  updatedAt DateTime  @updatedAt
 
   @@unique([grade, division, shift])
 }
