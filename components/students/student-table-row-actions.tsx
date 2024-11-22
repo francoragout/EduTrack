@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,12 +25,12 @@ import { StudentSchema } from "@/lib/zod";
 import Link from "next/link";
 import {
   Calendar,
-  Pencil,
   Trash,
   Users,
 } from "lucide-react";
 import { DeleteStudent } from "@/actions/student";
 import { toast } from "sonner";
+import StudentEditForm from "./student-edit-form";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -43,7 +42,7 @@ export function StudentsTableRowActions<TData>({
   const student = StudentSchema.parse(row.original);
   
   const handleDelete = async () => {
-    DeleteStudent(student.id || "", student.classroomId || "").then((response) => {
+    DeleteStudent(student.id ?? "", student.classroomId ?? "").then((response) => {
       if (response.success) {
         toast.success(response.message);
       } else {
@@ -95,19 +94,7 @@ export function StudentsTableRowActions<TData>({
             </Link>
           </Button>
 
-          <Button
-            asChild
-            variant="ghost"
-            className="flex justify-start pl-2"
-            size="sm"
-          >
-            <Link
-              href={`/administration/classrooms/${student.classroomId}/students/${student.id}/edit`}
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Editar</span>
-            </Link>
-          </Button>
+          <StudentEditForm student={student} classroomId={student.classroomId ?? ""}/>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

@@ -1,12 +1,20 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -14,33 +22,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import React, { useTransition } from "react";
-import { useForm } from "react-hook-form";
+} from "../ui/form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateStudent } from "@/actions/student";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { setPathname } from "@/lib/features/pathname/pathnameSlice";
-import { divisions, grades, shifts } from "@/constants/data";
+import { PlusCircle } from "lucide-react";
 import { ClassroomSchema, StudentSchema } from "@/lib/zod";
+import { Input } from "@/components/ui/input";
+import { CreateStudent } from "@/actions/student";
 
 type Classroom = z.infer<typeof ClassroomSchema>;
 
-interface StudentCreateFormProps {
-  classroom: Classroom;
-}
-
-export default function StudentCreateForm({
-  classroom,
-}: StudentCreateFormProps) {
+export default function StudentCreateForm({ classroom }: { classroom: Classroom }) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
   const form = useForm<z.infer<typeof StudentSchema>>({
     resolver: zodResolver(StudentSchema),
     defaultValues: {
@@ -49,26 +43,13 @@ export default function StudentCreateForm({
     },
   });
 
-  const classroomName =
-    grades.find((g) => g.value === classroom.grade)?.label +
-    " " +
-    divisions.find((d) => d.value === classroom.division)?.label +
-    " " +
-    shifts.find((s) => s.value === classroom.shift)?.label;
-
-  const dispatch = useDispatch();
-  React.useEffect(() => {
-    dispatch(
-      setPathname(`Administración/Grados/${classroomName}/Alumnos/Crear`)
-    );
-  }, [dispatch, classroomName]);
-
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
-      CreateStudent(values, classroom.id || "").then((response) => {
+      setOpen(false);
+      CreateStudent(values, classroom.id ?? "" ).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          router.push(`/administration/classrooms/${classroom.id}/students`);
+          form.reset();
         } else {
           toast.error(response.message);
         }
@@ -77,67 +58,74 @@ export default function StudentCreateForm({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Crear Alumno</CardTitle>
-        <CardDescription>
-          Utilice Tabs para navegar más rápido entre los campos.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default" className="h-8" size="sm">
+          <PlusCircle className="flex sm:hidden h-4 w-4" />
+          <span className="hidden sm:flex">Agregar Alumno</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Crear Alumno</DialogTitle>
+          <DialogDescription>
+            Utilice Tabs para navegar más rápido entre los campos.
+          </DialogDescription>
+        </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Nombre (requerido)"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Nombre</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Nombre (requerido)"
+                      {...field}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Apellido</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Apellido (requerido)"
-                        {...field}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex justify-end space-x-4 mt-8">
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="h-8"
-                disabled={isPending}
-              >
-                <Link
-                  href={`/administration/classrooms/${classroom.id}/students`}
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Apellido</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Apellido (requerido)"
+                      {...field}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="gap-4 pt-2 sm:space-x-0">
+              <DialogClose asChild>
+                <Button
+                  className="h-8"
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => form.reset()}
+                  disabled={isPending}
                 >
                   Cancelar
-                </Link>
-              </Button>
+                </Button>
+              </DialogClose>
               <Button
                 type="submit"
                 size="sm"
@@ -146,10 +134,10 @@ export default function StudentCreateForm({
               >
                 Guardar
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

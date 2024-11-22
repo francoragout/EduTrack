@@ -56,7 +56,7 @@ export function ClassroomsTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <div className="flex space-x-4">
+      <div className="flex">
         <ClassroomCreateForm preceptors={preceptors}/>
       </div>
     </div>

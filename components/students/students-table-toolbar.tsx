@@ -21,6 +21,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ClassroomSchema } from "@/lib/zod";
+import StudentCreateForm from "./student-create-form";
+import { Separator } from "../ui/separator";
 
 type Classroom = z.infer<typeof ClassroomSchema>;
 interface DataTableToolbarProps<TData> {
@@ -89,7 +91,7 @@ export function StudentsTableToolbar<TData>({
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
-         {isSomeRowsSelected && (
+        {isSomeRowsSelected && (
           <>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -104,9 +106,8 @@ export function StudentsTableToolbar<TData>({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Confirmar Ausencia
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>Confirmar Ausencia</AlertDialogTitle>
+                  <Separator />
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (
                       <span key={row.id}>
@@ -151,9 +152,8 @@ export function StudentsTableToolbar<TData>({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Confirmar Llegada Tarde
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>Confirmar Llegada Tarde</AlertDialogTitle>
+                  <Separator />
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (
                       <span key={row.id}>
@@ -188,16 +188,8 @@ export function StudentsTableToolbar<TData>({
           </>
         )}
       </div>
-      <div className="flex space-x-4">
-       
-        <Button size="sm" className="h-8 flex" asChild>
-          <Link
-            href={`/administration/classrooms/${classroom.id}/students/create`}
-          >
-            <PlusCircle className="flex sm:hidden h-4 w-4" />
-            <span className="hidden sm:flex">Nuevo alumno</span>
-          </Link>
-        </Button>
+      <div className="flex">
+        <StudentCreateForm classroom={classroom} />
       </div>
     </div>
   );

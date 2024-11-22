@@ -1,13 +1,14 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { AttendanceSchema } from "@/lib/zod";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export const CreateAbsent = async (
   selectedRows: string[],
   classroomId: string
 ) => {
-
   try {
     await db.attendance.createMany({
       data: selectedRows.map((studentId) => ({
@@ -20,18 +21,21 @@ export const CreateAbsent = async (
 
     return {
       success: true,
-      message: "Inasistencia creada exitosamente",
+      message: "Asistencia creada exitosamente",
     };
   } catch (error) {
     console.error("Error creating absent:", error);
     return {
       success: false,
-      message: "Error al crear inasistencia",
+      message: "Error al crear asistencia",
     };
   }
 };
 
-export const createLate = async (selectedRows: string[], classroomId: string) => {
+export const createLate = async (
+  selectedRows: string[],
+  classroomId: string
+) => {
   try {
     await db.attendance.createMany({
       data: selectedRows.map((studentId) => ({
@@ -44,16 +48,57 @@ export const createLate = async (selectedRows: string[], classroomId: string) =>
 
     return {
       success: true,
-      message: "Llegada tarde creada exitosamente",
+      message: "Asistencia creada exitosamente",
     };
   } catch (error) {
     console.error("Error creating attendance:", error);
     return {
       success: false,
-      message: "Error al crear llegada tarde",
+      message: "Error al crear asistencia",
     };
   }
-}
+};
+
+export const UpdateAttendance = async (
+  values: z.infer<typeof AttendanceSchema>,
+  attendanceId: string,
+  pathname: string
+) => {
+  const validatedFields = AttendanceSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Falta completar campos. No se pudo actualizar la asistencia.",
+    };
+  }
+
+  const { status } = validatedFields.data;
+
+  try {
+    await db.attendance.update({
+      where: {
+        id: attendanceId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    revalidatePath(pathname);
+    return {
+      success: true,
+      message: "Asistencia actualizada",
+    };
+  } catch (error) {
+    console.error("Error updating attendance:", error);
+    return {
+      success: false,
+      message: "Error al actualizar asistencia",
+    };
+  }
+};
 
 export const DeleteAttendance = async (id: string, pathname: string) => {
   try {
@@ -66,7 +111,7 @@ export const DeleteAttendance = async (id: string, pathname: string) => {
     revalidatePath(pathname);
     return {
       success: true,
-      message: "Asistencia eliminada exitosamente",
+      message: "Asistencia eliminada",
     };
   } catch (error) {
     console.error("Error deleting attendance:", error);

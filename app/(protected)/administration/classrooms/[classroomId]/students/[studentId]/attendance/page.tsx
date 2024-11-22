@@ -24,8 +24,7 @@ export default async function AttendancePage({
   params: Promise<{ studentId: string, classroomId: string }>;
 }) {
   const studentId = (await params).studentId;
-  const classroomId = (await params).classroomId;
-  console.log(classroomId)
+  
   const data = await getData(studentId);
   const student = await db.student.findUnique({
     where: {

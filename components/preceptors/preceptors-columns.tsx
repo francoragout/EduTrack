@@ -43,16 +43,12 @@ export const PreceptorsColumns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
-    ),
+    header: () => <div className="text-left">Email</div>,
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
   {
     accessorKey: "phone",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Teléfono" />
-    ),
+    header: () => <div className="text-left">Teléfono</div>,
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
   },
   {

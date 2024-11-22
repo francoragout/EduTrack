@@ -15,7 +15,7 @@ export const CreateStudent = async (
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create student.",
+      message: "Faltan campos. No se pudo crear el alumno.",
     };
   }
 
@@ -34,7 +34,7 @@ export const CreateStudent = async (
       },
     });
 
-    revalidatePath(`/administration/grades/${classroomId}/students`);
+    revalidatePath(`/administration/classrooms/${classroomId}/students`);
     return {
       success: true,
       message: "Alumno creado exitosamente",
@@ -51,7 +51,7 @@ export const CreateStudent = async (
 export const UpdateStudent = async (
   values: z.infer<typeof StudentSchema>,
   studentId: string,
-  gradeId: string
+  classroomId: string
 ) => {
   const validatedFields = StudentSchema.safeParse(values);
 
@@ -59,7 +59,7 @@ export const UpdateStudent = async (
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Update student.",
+      message: "Faltan campos. No se pudo actualizar el alumno.",
     };
   }
 
@@ -76,7 +76,7 @@ export const UpdateStudent = async (
       },
     });
 
-    revalidatePath(`/administration/grades/${gradeId}/students`);
+    revalidatePath(`/administration/classrooms/${classroomId}/students`);
     return {
       success: true,
       message: "Alumno actualizado",
@@ -98,7 +98,7 @@ export const DeleteStudent = async (id: string, classroomId: string) => {
       },
     });
 
-    revalidatePath(`/administration/grades/${classroomId}/students`);
+    revalidatePath(`/administration/classrooms/${classroomId}/students`);
     return {
       success: true,
       message: "Alumno eliminado",

@@ -6,6 +6,8 @@ import { z } from "zod";
 import { AttendanceSchema } from "@/lib/zod";
 import { AttendanceTableRowActions } from "./attendance-table-row-actions";
 import { statuses } from "@/constants/data";
+import { es } from 'date-fns/locale';
+import { format } from "date-fns";
 
 type Attendance = z.infer<typeof AttendanceSchema>;
 
@@ -16,16 +18,26 @@ export const AttendanceColumns: ColumnDef<Attendance>[] = [
       <DataTableColumnHeader column={column} title="Fecha" />
     ),
     cell: ({ row }) => {
-        const date = row.getValue("createdAt") as Date;
-        return (
-            <div>
-            {date.toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            })}
-            </div>
-        );
+      const date = row.getValue("createdAt") as Date;
+      return (
+        <div>
+          {format(date, 'PPP', { locale: es })}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "time",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Hora" />
+    ),
+    cell: ({ row }) => {
+      const date = row.getValue("createdAt") as Date;
+      return (
+        <div>
+          {format(date, 'p', { locale: es })}
+        </div>
+      );
     },
   },
   {

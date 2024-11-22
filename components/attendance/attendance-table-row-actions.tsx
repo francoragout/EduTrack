@@ -14,6 +14,7 @@ import { MoreHorizontal, Trash } from "lucide-react";
 import { DeleteAttendance } from "@/actions/attendance";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
+import AttendanceEditForm from "./attendance-edit-form";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -47,6 +48,7 @@ export function AttendanceTableRowActions<TData>({
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col">
+          <AttendanceEditForm attendance={attendance} />
           <Button
             variant="ghost"
             className="flex justify-start pl-2"
