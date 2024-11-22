@@ -81,8 +81,6 @@ export function StudentsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  console.log(data);
-
   const classroomName =
     grades.find((g) => g.value === classroom.grade)?.label +
     " " +

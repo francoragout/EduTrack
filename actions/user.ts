@@ -68,3 +68,53 @@ export const DeletePreceptor = async (id: string) => {
     };
   }
 }
+
+export const CreateTutor = async (
+  values: z.infer<typeof UserSchema>,
+  studentId: string,
+  pathname: string,
+) => {
+  const validatedFields = UserSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Tutor.",
+    };
+  }
+
+  const { firstName, lastName, email, phone } = validatedFields.data;
+
+  try {
+    await db.userOnStudent.create({
+      data: {
+        user: {
+          create: {
+            firstName,
+            lastName,
+            email,
+            phone,
+          },
+        },
+        student: {
+          connect: {
+            id: studentId,
+          },
+        },
+      },
+    });
+
+    revalidatePath(pathname);
+    return {
+      success: true,
+      message: "Tutor creado",
+    };
+  } catch (error) {
+    console.error("Error creating tutor:", error);
+    return {
+      success: false,
+      message: "Error al crear tutor",
+    };
+  }
+}

@@ -36,11 +36,15 @@ const UserSchema: z.ZodType<any> = z.lazy(() =>
         message: "El apellido debe tener menos de 30 caracteres",
       })
       .nullish(),
-    email: z.string().email().optional(),
-    role: z.enum(["ADMIN", "EDITOR", "USER"], {
-      message: "Seleccionar un rol",
+    email: z.string().email({
+      message: "El email no es válido",
     }),
+    role: z
+      .enum(["ADMIN", "EDITOR", "USER"], {
+        message: "Seleccionar un rol",
+      }).optional(),
     image: z.string().optional(),
+    phone: z.string().nullish(),
     createdAt: z.date().optional(),
     classrooms: z.array(ClassroomSchema).optional(),
   })

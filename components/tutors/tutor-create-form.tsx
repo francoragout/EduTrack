@@ -25,37 +25,36 @@ import {
 } from "../ui/form";
 import { toast } from "sonner";
 import { PlusCircle } from "lucide-react";
-import { StudentSchema, TutorSchema } from "@/lib/zod";
+import { UserSchema } from "@/lib/zod";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { CreateTutor } from "@/actions/tutor";
+import { CreateTutor } from "@/actions/user";
 
-type Student = z.infer<typeof StudentSchema>;
 interface AttendanceCreateFormProps {
-  student: Student;
+  studentId: string;
 }
 
 export default function TutorCreateForm({
-  student,
+  studentId,
 }: AttendanceCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const form = useForm<z.infer<typeof TutorSchema>>({
-    resolver: zodResolver(TutorSchema),
+  const form = useForm<z.infer<typeof UserSchema>>({
+    resolver: zodResolver(UserSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
       lastName: "",
       email: "",
       phone: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof TutorSchema>) {
+  function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
       setOpen(false);
-      CreateTutor(student.id || "", pathname, values).then((response) => {
+      CreateTutor(values, studentId, pathname).then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
@@ -88,7 +87,7 @@ export default function TutorCreateForm({
           >
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Nombre</FormLabel>
@@ -97,6 +96,7 @@ export default function TutorCreateForm({
                       placeholder="Nombre (requerido)"
                       {...field}
                       disabled={isPending}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -115,6 +115,7 @@ export default function TutorCreateForm({
                       placeholder="Apellido (requerido)"
                       {...field}
                       disabled={isPending}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -133,7 +134,6 @@ export default function TutorCreateForm({
                       placeholder="Email (requerido)"
                       {...field}
                       disabled={isPending}
-                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -149,10 +149,11 @@ export default function TutorCreateForm({
                   <FormLabel>Teléfono</FormLabel>
                   <FormControl>
                     <Input
-                    type="tel"
                       placeholder="Teléfono (opcional)"
                       {...field}
                       disabled={isPending}
+                      type="tel"
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />

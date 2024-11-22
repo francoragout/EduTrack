@@ -34,10 +34,6 @@ const data = {
           title: "Preceptores",
           url: "/administration/preceptors",
         },
-        {
-          title: "Tutores",
-          url: "/administration/tutors",
-        },
       ],
     },
     {

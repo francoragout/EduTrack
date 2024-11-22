@@ -1,51 +1,30 @@
 import { TutorsColumns } from "@/components/tutors/tutors-columns";
 import { TutorsTable } from "@/components/tutors/tutors-table";
 import { db } from "@/lib/db";
-import { TutorOnStudentSchema, TutorSchema } from "@/lib/zod";
+import { UserOnStudentSchema, UserSchema } from "@/lib/zod";
 import { z } from "zod";
 
-type Tutor = z.infer<typeof TutorSchema>;
+type User = z.infer<typeof UserSchema>;
 
-async function getData(studentId: string): Promise<Tutor[]> {
-  const tutors = await db.tutorOnStudent.findMany({
+async function getData(studentId: string): Promise<User[]> {
+  const tutors = await db.userOnStudent.findMany({
     where: {
       studentId,
     },
     select: {
-      tutor: true,
+      user: true,
     },
   });
-
-  return tutors.map((t) => ({
-    ...t.tutor,
-    phone: t.tutor.phone ?? undefined,
-  }));
+  
+  return tutors.map((tutor) => tutor.user);
 }
 
 export default async function TutorsPage({
   params,
 }: {
-  params: { studentId: string; gradeId: string };
+  params: Promise<{ studentId: string; classroomId: string }>;
 }) {
   const studentId = (await params).studentId;
-  const data = await getData(studentId);
-
-  const gradeId = (await params).gradeId;
-
-  const grade = await db.grade.findUnique({
-    where: {
-      id: gradeId,
-    },
-    select: {
-      grade: true,
-      division: true,
-      shift: true,
-    },
-  });
-
-  if (!grade) {
-    return <div>Grade not found</div>;
-  }
 
   const student = await db.student.findUnique({
     where: {
@@ -53,21 +32,41 @@ export default async function TutorsPage({
     },
     select: {
       id: true,
-      name: true,
+      firstName: true,
       lastName: true,
     },
   });
 
   if (!student) {
-    return <div>Student not found</div>;
+    return null;
   }
+
+  const classroomId = (await params).classroomId;
+
+  const classroom = await db.classroom.findUnique({
+    where: {
+      id: classroomId,
+    },
+    select: {
+      grade: true,
+      division: true,
+      shift: true,
+      id: true,
+    },
+  });
+
+  if (!classroom) {
+    return null;
+  }
+
+  const data = await getData(studentId);
 
   return (
     <TutorsTable
-      columns={TutorsColumns}
       data={data}
+      columns={TutorsColumns}
+      classroom={classroom}
       student={student}
-      grade={grade}
     />
   );
 }

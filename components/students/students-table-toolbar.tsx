@@ -68,7 +68,7 @@ export function StudentsTableToolbar<TData>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-1 items-center space-x-4">
         <Input
           placeholder="Filtrar alumnos..."
           value={
@@ -89,9 +89,7 @@ export function StudentsTableToolbar<TData>({
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
-      </div>
-      <div className="flex space-x-4">
-        {isSomeRowsSelected && (
+         {isSomeRowsSelected && (
           <>
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -100,14 +98,14 @@ export function StudentsTableToolbar<TData>({
                   size="sm"
                   className="h-8 flex border-dashed"
                 >
-                  <CalendarX2 className="flex h-4 w-4" />
+                  <CalendarX2 className="flex h-4 w-4 mr-1" />
                   <span className="hidden sm:flex">Ausente</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Confirmar inasistencia de:
+                    Confirmar Ausencia
                   </AlertDialogTitle>
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (
@@ -145,7 +143,7 @@ export function StudentsTableToolbar<TData>({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 flex border-dashed"
+                  className="h-8 flex border-dashed mr-1"
                 >
                   <ClockAlert className="flex h-4 w-4" />
                   <span className="hidden sm:flex">Tarde</span>
@@ -154,7 +152,7 @@ export function StudentsTableToolbar<TData>({
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Confirmar llegada tarde de:
+                    Confirmar Llegada Tarde
                   </AlertDialogTitle>
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (
@@ -189,6 +187,9 @@ export function StudentsTableToolbar<TData>({
             </AlertDialog>
           </>
         )}
+      </div>
+      <div className="flex space-x-4">
+       
         <Button size="sm" className="h-8 flex" asChild>
           <Link
             href={`/administration/classrooms/${classroom.id}/students/create`}

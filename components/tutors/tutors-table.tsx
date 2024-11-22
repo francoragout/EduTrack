@@ -29,23 +29,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { TutorsTableToolbar } from "./tutors-table-toolbar";
 import { z } from "zod";
-import { GradeSchema, StudentSchema } from "@/lib/zod";
+import { ClassroomSchema, StudentSchema } from "@/lib/zod";
 import { divisions, grades, shifts } from "@/constants/data";
 
 type Student = z.infer<typeof StudentSchema>;
-type Grade = z.infer<typeof GradeSchema>;
+type Classroom = z.infer<typeof ClassroomSchema>;
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  classroom: Classroom;
   student: Student;
-  grade: Grade;
 }
 
 export function TutorsTable<TData, TValue>({
   columns,
   data,
+  classroom,
   student,
-  grade,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -76,26 +77,26 @@ export function TutorsTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
+  
 
   const gradeName =
-    grades.find((g) => g.value === grade.grade)?.label +
+    grades.find((g) => g.value === classroom.grade)?.label +
     " " +
-    divisions.find((d) => d.value === grade.division)?.label +
+    divisions.find((d) => d.value === classroom.division)?.label +
     " " +
-    shifts.find((s) => s.value === grade.shift)?.label;
-  console.log(student);
+    shifts.find((s) => s.value === classroom.shift)?.label;
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(
       setPathname(
-        `/Administración/Grados/${gradeName}/Alumnos/${student.name} ${student.lastName}/Tutores`
+        `/Administración/Aulas/${gradeName}/Alumnos/${student.firstName} ${student.lastName}/Tutores`
       )
     );
-  }, [dispatch, gradeName, student.name, student.lastName]);
+  }, [dispatch, gradeName, student]);
 
   return (
     <div className="space-y-4">
-      <TutorsTableToolbar table={table} student={student}/>
+      <TutorsTableToolbar table={table} studentId={student.id || ""} classroomId={classroom.id || ""}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -42,8 +42,6 @@ export function StudentsTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const student = StudentSchema.parse(row.original);
   
-  
-
   const handleDelete = async () => {
     DeleteStudent(student.id || "", student.classroomId || "").then((response) => {
       if (response.success) {
@@ -53,8 +51,6 @@ export function StudentsTableRowActions<TData>({
       }
     });
   };
-
-  
 
   return (
     <DropdownMenu>
