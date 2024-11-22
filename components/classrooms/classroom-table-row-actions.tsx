@@ -26,9 +26,14 @@ import Link from "next/link";
 import { Pencil, Trash, User, Users } from "lucide-react";
 import { grades, shifts } from "@/constants/data";
 import { toast } from "sonner";
-import { ClassroomSchema } from "@/lib/zod";
+import { ClassroomSchema, UserSchema } from "@/lib/zod";
 import { DeleteClassroom } from "@/actions/classroom";
 import { useSession } from "next-auth/react";
+import ClassroomEditForm from "./classroom-edit-form";
+import { z } from "zod";
+import { GetPreceptors } from "@/actions/preceptor";
+
+type Preceptor = z.infer<typeof UserSchema>;
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -77,31 +82,7 @@ export function ClassroomTableRowActions<TData>({
             </Link>
           </Button>
 
-          {session?.user?.role === "ADMIN" ? (
-            <Button
-              asChild
-              variant="ghost"
-              className="flex justify-start pl-2"
-              size="sm"
-            >
-              <Link
-                href={`/administration/classrooms/${classroom.id}/edit`}
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                <span>Editar</span>
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              className="flex justify-start pl-2"
-              size="sm"
-              disabled
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Editar</span>
-            </Button>
-          )}
+          <ClassroomEditForm classroom={classroom} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

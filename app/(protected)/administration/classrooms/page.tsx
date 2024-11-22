@@ -25,14 +25,26 @@ async function getData(): Promise<Classroom[]> {
       updatedAt: "desc",
     },
   });
+
   return classrooms.map((classroom) => ClassroomSchema.parse(classroom));
 }
 
 export default async function ClassroomsPage() {
   const data = await getData();
+
+  const preceptors = await db.user.findMany({
+    where: {
+      role: "EDITOR",
+    },
+  });
+
   return (
     <SessionProvider>
-      <ClassroomsTable columns={ClassroomsColumns} data={data} />
+      <ClassroomsTable
+        columns={ClassroomsColumns}
+        data={data}
+        preceptors={preceptors}
+      />
     </SessionProvider>
   );
 }

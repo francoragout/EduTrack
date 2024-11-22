@@ -5,15 +5,19 @@ import { Button } from "@/components/ui/button";
 import { divisions, grades, shifts } from "@/constants/data";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
+import ClassroomCreateForm from "./classroom-create-form";
+import { UserSchema } from "@/lib/zod";
+import { z } from "zod";
 
+type Preceptors = z.infer<typeof UserSchema>;
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  preceptors: Preceptors[];
 }
 
-export function GradesTableToolbar<TData>({
+export function ClassroomsTableToolbar<TData>({
   table,
+  preceptors,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -53,12 +57,7 @@ export function GradesTableToolbar<TData>({
         )}
       </div>
       <div className="flex space-x-4">
-        <Button size="sm" className="h-8 flex" asChild>
-          <Link href="/administration/classrooms/create">
-            <PlusCircle className="flex sm:hidden h-4 w-4" />
-            <span className="hidden sm:flex">Agregar Aula</span>
-          </Link>
-        </Button>
+        <ClassroomCreateForm preceptors={preceptors}/>
       </div>
     </div>
   );

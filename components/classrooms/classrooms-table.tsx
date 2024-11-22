@@ -24,19 +24,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GradesTableToolbar } from "./classrooms-table-toolbar";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { UserSchema } from "@/lib/zod";
+import { z } from "zod";
+import { ClassroomsTableToolbar } from "./classrooms-table-toolbar";
 
+type Preceptor = z.infer<typeof UserSchema>;
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  preceptors: Preceptor[];
 }
 
 export function ClassroomsTable<TData, TValue>({
   columns,
   data,
+  preceptors,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -75,7 +80,7 @@ export function ClassroomsTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <GradesTableToolbar table={table} />
+      <ClassroomsTableToolbar table={table} preceptors={preceptors}/>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -5,6 +5,16 @@ import { UserSchema } from "@/lib/zod";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+export const GetPreceptors = async () => {
+  const preceptors = await db.user.findMany({
+    where: {
+      role: "EDITOR",
+    },
+  });
+
+  return preceptors.map((preceptor) => UserSchema.parse(preceptor));
+};
+
 export const CreatePreceptor = async (values: z.infer<typeof UserSchema>) => {
   const validatedFields = UserSchema.safeParse(values);
 

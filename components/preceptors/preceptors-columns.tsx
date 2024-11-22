@@ -57,7 +57,7 @@ export const PreceptorsColumns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "classrooms",
-    header: () => <div className="text-left">Grados</div>,
+    header: () => <div className="text-left">Aulas</div>,
     cell: ({ row }) => {
       const classroomsData = row.getValue("classrooms") as {
         division: string;
