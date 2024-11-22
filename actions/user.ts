@@ -47,28 +47,6 @@ export const EditPreceptor = async (
   }
 };
 
-export const DeletePreceptor = async (id: string) => {
-  try {
-    await db.user.delete({
-      where: {
-        id,
-      },
-    });
-
-    revalidatePath("/administration/preceptors");
-    return {
-      success: true,
-      message: "Preceptor eliminado",
-    };
-  } catch (error) {
-    console.error("Error deleting preceptor:", error);
-    return {
-      success: false,
-      message: "Error al eliminar preceptor",
-    };
-  }
-}
-
 export const CreateTutor = async (
   values: z.infer<typeof UserSchema>,
   studentId: string,

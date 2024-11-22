@@ -23,43 +23,30 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
-import { Pencil } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { UserSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
-import { UpdatePreceptor } from "@/actions/preceptor";
-import { cn } from "@/lib/utils";
-import { roles } from "@/constants/data";
+import { CreatePreceptor } from "@/actions/preceptor";
 
-type User = z.infer<typeof UserSchema>;
-
-export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
+export default function PreceptorCreateForm() {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      firstName: preceptor.firstName,
-      lastName: preceptor.lastName,
-      email: preceptor.email,
-      phone: preceptor.phone,
-      role: preceptor.role,
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
       setOpen(false);
-      UpdatePreceptor(values, preceptor.id ?? "").then((response) => {
+      CreatePreceptor(values).then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
@@ -73,18 +60,14 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex justify-start pl-2 w-full"
-        >
-          <Pencil className="mr-2 h-4 w-4" />
-          Editar
+        <Button variant="default" className="h-8" size="sm">
+          <PlusCircle className="flex sm:hidden h-4 w-4" />
+          <span className="hidden sm:flex">Nuevo Preceptor</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar Preceptor</DialogTitle>
+          <DialogTitle>Crear Preceptor</DialogTitle>
           <DialogDescription>
             Utilice Tabs para navegar más rápido entre los campos.
           </DialogDescription>
@@ -162,42 +145,6 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                       type="tel"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Rol</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    disabled={isPending}
-                    defaultValue={field.value || ""}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={cn(
-                          "pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <SelectValue placeholder="Seleccionar rol (requerido)" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectGroup>
-                        {roles.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {role.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

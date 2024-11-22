@@ -24,8 +24,9 @@ import { UserSchema } from "@/lib/zod";
 import { MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { DeletePreceptor } from "@/actions/user";
 import { useSession } from "next-auth/react";
+import PreceptorEditForm from "./preceptor-edit-form";
+import { DeletePreceptor } from "@/actions/preceptor";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -36,7 +37,6 @@ export function PreceptorTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const preceptor = UserSchema.parse(row.original);
   const { data: session } = useSession();
-  console.log(session);
 
   const handleDelete = async () => {
     DeletePreceptor(preceptor.id).then((response) => {
@@ -60,17 +60,7 @@ export function PreceptorTableRowActions<TData>({
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col">
-          <Button
-            asChild
-            variant="ghost"
-            className="flex justify-start pl-2"
-            size="sm"
-          >
-            <Link href={`/administration/preceptors/${preceptor.id}/edit`}>
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Editar</span>
-            </Link>
-          </Button>
+          <PreceptorEditForm preceptor={preceptor} />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button

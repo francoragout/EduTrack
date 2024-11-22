@@ -42,9 +42,10 @@ const UserSchema: z.ZodType<any> = z.lazy(() =>
     role: z
       .enum(["ADMIN", "EDITOR", "USER"], {
         message: "Seleccionar un rol",
-      }).optional(),
-    image: z.string().optional(),
-    phone: z.string().nullish(),
+      })
+      .optional(),
+    image: z.string().nullish(),
+    phone: z.string().optional(),
     createdAt: z.date().optional(),
     classrooms: z.array(ClassroomSchema).optional(),
   })

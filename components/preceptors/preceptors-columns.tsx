@@ -55,25 +55,6 @@ export const PreceptorsColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
   },
-  // {
-  //   accessorKey: "createdAt",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Creado el" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const date = row.getValue("createdAt") as Date;
-
-  //     return (
-  //       <div>
-  //         {date.toLocaleDateString("es-AR", {
-  //           year: "numeric",
-  //           month: "long",
-  //           day: "numeric",
-  //         })}
-  //       </div>
-  //     );
-  //   },
-  // },
   {
     accessorKey: "classrooms",
     header: () => <div className="text-left">Grados</div>,

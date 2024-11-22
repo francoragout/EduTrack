@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import PreceptorCreateForm from "./preceptor-create-form";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -39,6 +40,9 @@ export function PreceptorsTableToolbar<TData>({
             <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
+      </div>
+      <div className="flex space-x-4">
+        <PreceptorCreateForm />
       </div>
     </div>
   );
