@@ -11,7 +11,7 @@ async function getData(studentId: string): Promise<User[]> {
     where: {
       studentId,
     },
-    select: {
+    include: {
       user: true,
     },
   });

@@ -70,8 +70,6 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
     });
   }
 
-  
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

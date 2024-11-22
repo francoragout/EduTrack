@@ -37,7 +37,7 @@ export const CreateStudent = async (
     revalidatePath(`/administration/classrooms/${classroomId}/students`);
     return {
       success: true,
-      message: "Alumno creado exitosamente",
+      message: "Alumno creado",
     };
   } catch (error) {
     console.log(error);

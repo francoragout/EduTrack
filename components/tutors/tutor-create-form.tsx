@@ -28,7 +28,7 @@ import { PlusCircle } from "lucide-react";
 import { UserSchema } from "@/lib/zod";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { CreateTutor } from "@/actions/user";
+import { CreateTutor } from "@/actions/tutor";
 
 interface AttendanceCreateFormProps {
   studentId: string;

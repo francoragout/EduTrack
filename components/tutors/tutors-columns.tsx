@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { UserSchema } from "@/lib/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { TutorTableRowActions } from "./tutor-table-row-actions";
 
 type User = z.infer<typeof UserSchema>;
 
@@ -52,5 +53,9 @@ export const TutorsColumns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Teléfono" />
     ),
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <TutorTableRowActions row={row} />,
   },
 ];

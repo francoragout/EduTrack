@@ -42,7 +42,7 @@ export const CreatePreceptor = async (values: z.infer<typeof UserSchema>) => {
     revalidatePath("/administration/preceptors");
     return {
       success: true,
-      message: "Preceptor creado exitosamente",
+      message: "Preceptor creado",
     };
   } catch (error) {
     console.error("Error creating preceptor:", error);

@@ -21,7 +21,7 @@ export const CreateAbsent = async (
 
     return {
       success: true,
-      message: "Asistencia creada exitosamente",
+      message: "Asistencia creada",
     };
   } catch (error) {
     console.error("Error creating absent:", error);
@@ -48,7 +48,7 @@ export const createLate = async (
 
     return {
       success: true,
-      message: "Asistencia creada exitosamente",
+      message: "Asistencia creada",
     };
   } catch (error) {
     console.error("Error creating attendance:", error);

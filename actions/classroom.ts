@@ -12,7 +12,7 @@ export const CreateClassroom = async (values: z.infer<typeof ClassroomSchema>) =
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Classroom",
+      message: "Faltan campos. No se pudo crear el aula.",
     };
   }
 
@@ -31,7 +31,7 @@ export const CreateClassroom = async (values: z.infer<typeof ClassroomSchema>) =
     revalidatePath("/administration/classrooms");
     return {
       success: true,
-      message: "Aula creada exitosamente",
+      message: "Aula creada",
     };
   } catch (error) {
     console.error("Error creating classroom:", error);
@@ -52,7 +52,7 @@ export const UpdateClassroom = async (
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Update Classroom.",
+      message: "Falatan campos. No se pudo actualizar el aula.",
     };
   }
 
