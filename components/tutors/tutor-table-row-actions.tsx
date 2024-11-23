@@ -9,9 +9,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { UserSchema } from "@/lib/zod";
 import { MoreHorizontal, Trash } from "lucide-react";
-import { DeleteAttendance } from "@/actions/attendance";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import TutorEditForm from "./tutor-edit-form";
@@ -28,7 +38,7 @@ export function TutorTableRowActions<TData>({
   const pathname = usePathname();
 
   const handleDelete = async () => {
-    DeleteTutor(tutor.id ?? "", pathname).then((response) => {
+    DeleteTutor(tutor.id ?? "", tutor.studentId ?? "", pathname).then((response) => {
       if (response.success) {
         toast.success(response.message);
       } else {
@@ -50,15 +60,42 @@ export function TutorTableRowActions<TData>({
         <DropdownMenuSeparator />
         <div className="flex flex-col">
           <TutorEditForm tutor={tutor}/>
-          <Button
-            variant="ghost"
-            className="flex justify-start pl-2"
-            size="sm"
-            onClick={handleDelete}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            <span>Eliminar</span>
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex justify-start pl-2 w-full"
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                Eliminar
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  ¿Estas completamente seguro?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta acción no se puede deshacer. Esto eliminará
+                  permanentemente el tutor:
+                  {
+                    <span className="text-primary">
+                      {" "}
+                      &apos;{tutor.firstName} {tutor.lastName}&apos;
+                    </span>
+                  }{" "}
+                  y todos los datos asociados de nuestros servidores.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Continuar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>        
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

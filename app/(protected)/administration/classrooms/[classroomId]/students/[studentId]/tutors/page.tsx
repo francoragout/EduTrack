@@ -13,10 +13,14 @@ async function getData(studentId: string): Promise<User[]> {
     },
     include: {
       user: true,
+      student: true,
     },
   });
   
-  return tutors.map((tutor) => tutor.user);
+  return tutors.map((tutor) => ({
+    ...tutor.user,
+    studentId, // Añadir studentId a cada tutor
+  }));
 }
 
 export default async function TutorsPage({

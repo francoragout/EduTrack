@@ -105,7 +105,6 @@ export const UpdateTutor = async (
         phone,
       },
     });
-    
 
     revalidatePath(pathname);
     return {
@@ -121,19 +120,44 @@ export const UpdateTutor = async (
   }
 };
 
-export const DeleteTutor = async (id: string, pathname: string) => {
+export const DeleteTutor = async (
+  tutorId: string,
+  studentId: string,
+  pathname: string
+) => {
   try {
-    await db.user.delete({
+    const tutorRelations = await db.userOnStudent.findMany({
       where: {
-        id,
+        userId: tutorId,
       },
     });
 
-    revalidatePath(pathname);
-    return {
-      success: true,
-      message: "Tutor eliminado",
-    };
+    if (tutorRelations.length > 1) {
+      await db.userOnStudent.delete({
+        where: {
+          userId_studentId: {
+            userId: tutorId,
+            studentId,
+          },
+        },
+      });
+      revalidatePath(pathname);
+      return {
+        success: true,
+        message: "Relacion eliminada",
+      };
+    } else {
+      await db.user.delete({
+        where: {
+          id: tutorId,
+        },
+      });
+      revalidatePath(pathname);
+      return {
+        success: true,
+        message: "Tutor eliminado",
+      };
+    }
   } catch (error) {
     console.error("Error deleting tutor:", error);
     return {

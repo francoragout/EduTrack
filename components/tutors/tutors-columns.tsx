@@ -56,6 +56,6 @@ export const TutorsColumns: ColumnDef<User>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <TutorTableRowActions row={row} />,
+    cell: ({ row }) => <TutorTableRowActions row={row} />
   },
 ];
