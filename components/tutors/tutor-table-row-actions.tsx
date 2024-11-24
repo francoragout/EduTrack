@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import TutorEditForm from "./tutor-edit-form";
 import { DeleteTutor } from "@/actions/tutor";
+import { useSession } from "next-auth/react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,16 +36,19 @@ export function TutorTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const tutor = UserSchema.parse(row.original);
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const handleDelete = async () => {
-    DeleteTutor(tutor.id ?? "", tutor.studentId ?? "", pathname).then((response) => {
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
+    DeleteTutor(tutor.id ?? "", tutor.studentId ?? "", pathname).then(
+      (response) => {
+        if (response.success) {
+          toast.success(response.message);
+        } else {
+          toast.error(response.message);
+        }
       }
-    });
+    );
   };
 
   return (
@@ -59,13 +63,14 @@ export function TutorTableRowActions<TData>({
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col">
-          <TutorEditForm tutor={tutor}/>
+          <TutorEditForm tutor={tutor} />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
                 className="flex justify-start pl-2 w-full"
+                disabled={session?.user?.role !== "ADMIN"}
               >
                 <Trash className="mr-2 h-4 w-4" />
                 Eliminar
@@ -95,7 +100,7 @@ export function TutorTableRowActions<TData>({
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>        
+          </AlertDialog>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

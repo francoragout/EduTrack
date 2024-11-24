@@ -45,7 +45,7 @@ const UserSchema: z.ZodType<any> = z.lazy(() =>
       })
       .optional(),
     image: z.string().nullish(),
-    phone: z.string().optional(),
+    phone: z.string().nullish(),
     createdAt: z.date().optional(),
     classrooms: z.array(ClassroomSchema).optional(),
     studentId: z.string().optional(),

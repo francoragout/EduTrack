@@ -28,10 +28,12 @@ import { PlusCircle } from "lucide-react";
 import { UserSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
 import { CreatePreceptor } from "@/actions/preceptor";
+import { useSession } from "next-auth/react";
 
 export default function PreceptorCreateForm() {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
@@ -60,9 +62,14 @@ export default function PreceptorCreateForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="h-8" size="sm">
+        <Button
+          variant="default"
+          className="h-8"
+          size="sm"
+          disabled={session?.user?.role !== "ADMIN"}
+        >
           <PlusCircle className="flex sm:hidden h-4 w-4" />
-          <span className="hidden sm:flex">Nuevo Preceptor</span>
+          <span className="hidden sm:flex">Agregar Preceptor</span>
         </Button>
       </DialogTrigger>
       <DialogContent>

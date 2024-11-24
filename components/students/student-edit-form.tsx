@@ -28,6 +28,7 @@ import { Pencil, PlusCircle } from "lucide-react";
 import { ClassroomSchema, StudentSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
 import { UpdateStudent } from "@/actions/student";
+import { useSession } from "next-auth/react";
 
 type Student = z.infer<typeof StudentSchema>;
 
@@ -42,6 +43,7 @@ export default function StudentEditForm({
 }: StudentEditFormProps) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof StudentSchema>>({
     resolver: zodResolver(StudentSchema),
@@ -72,6 +74,7 @@ export default function StudentEditForm({
           variant="ghost"
           size="sm"
           className="flex justify-start pl-2 w-full"
+          disabled={session?.user?.role !== "ADMIN"}
         >
           <Pencil className="mr-2 h-4 w-4" />
           Editar

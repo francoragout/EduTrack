@@ -29,6 +29,7 @@ import { UserSchema } from "@/lib/zod";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { CreateTutor } from "@/actions/tutor";
+import { useSession } from "next-auth/react";
 
 interface AttendanceCreateFormProps {
   studentId: string;
@@ -39,6 +40,7 @@ export default function TutorCreateForm({
 }: AttendanceCreateFormProps) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const form = useForm<z.infer<typeof UserSchema>>({
@@ -68,7 +70,12 @@ export default function TutorCreateForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="h-8" size="sm">
+        <Button
+          variant="default"
+          className="h-8"
+          size="sm"
+          disabled={session?.user?.role !== "ADMIN"}
+        >
           <PlusCircle className="flex sm:hidden h-4 w-4" />
           <span className="hidden sm:flex">Nuevo Tutor</span>
         </Button>

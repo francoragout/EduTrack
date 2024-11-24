@@ -39,6 +39,7 @@ import { ClassroomSchema, UserSchema } from "@/lib/zod";
 import { Pencil } from "lucide-react";
 import { useState, useEffect, useTransition } from "react";
 import { GetPreceptors } from "@/actions/preceptor";
+import { useSession } from "next-auth/react";
 
 type Classroom = z.infer<typeof ClassroomSchema>;
 type Preceptor = z.infer<typeof UserSchema>;
@@ -53,6 +54,7 @@ export default function ClassroomEditForm({
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [preceptors, setPreceptors] = useState<Preceptor[]>([]);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof ClassroomSchema>>({
     resolver: zodResolver(ClassroomSchema),
@@ -94,6 +96,7 @@ export default function ClassroomEditForm({
           variant="ghost"
           size="sm"
           className="flex justify-start pl-2 w-full"
+          disabled={session?.user?.role !== "ADMIN"}
         >
           <Pencil className="mr-2 h-4 w-4" />
           Editar

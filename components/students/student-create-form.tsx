@@ -28,12 +28,18 @@ import { PlusCircle } from "lucide-react";
 import { ClassroomSchema, StudentSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
 import { CreateStudent } from "@/actions/student";
+import { useSession } from "next-auth/react";
 
 type Classroom = z.infer<typeof ClassroomSchema>;
 
-export default function StudentCreateForm({ classroom }: { classroom: Classroom }) {
+export default function StudentCreateForm({
+  classroom,
+}: {
+  classroom: Classroom;
+}) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof StudentSchema>>({
     resolver: zodResolver(StudentSchema),
@@ -46,7 +52,7 @@ export default function StudentCreateForm({ classroom }: { classroom: Classroom 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
       setOpen(false);
-      CreateStudent(values, classroom.id ?? "" ).then((response) => {
+      CreateStudent(values, classroom.id ?? "").then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
@@ -60,7 +66,12 @@ export default function StudentCreateForm({ classroom }: { classroom: Classroom 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="h-8" size="sm">
+        <Button
+          variant="default"
+          className="h-8"
+          size="sm"
+          disabled={session?.user?.role !== "ADMIN"}
+        >
           <PlusCircle className="flex sm:hidden h-4 w-4" />
           <span className="hidden sm:flex">Agregar Alumno</span>
         </Button>

@@ -7,18 +7,36 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { RootState } from "@/lib/store";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function DinamicBreadcrumb() {
   const pathnameTranslate = useSelector(
     (state: RootState) => state.pathname.value
   );
-  const pathSegmentsTranslate = pathnameTranslate.split("/").filter(Boolean);
   const pathname = usePathname();
-  const pathSegments = pathname.split("/").filter(Boolean);
+
+  const [pathSegments, setPathSegments] = useState<string[]>([]);
+  const [pathSegmentsTranslate, setPathSegmentsTranslate] = useState<string[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (pathname && pathnameTranslate) {
+      setPathSegments(pathname.split("/").filter(Boolean));
+      setPathSegmentsTranslate(pathnameTranslate.split("/").filter(Boolean));
+    }
+  }, [pathname, pathnameTranslate]);
 
   return (
     <Breadcrumb>
@@ -28,11 +46,35 @@ export default function DinamicBreadcrumb() {
           const isLast = index === pathSegments.length - 1;
           const translatedSegment = pathSegmentsTranslate[index] || segment;
           const hasSpace = translatedSegment.includes(" ");
+          const isTutors = segment === "tutors";
+          const isAttendance = segment === "attendance";
 
           return (
             <React.Fragment key={index}>
               <BreadcrumbItem>
-                {isFirst || isLast || hasSpace ? (
+                {isLast && (isTutors || isAttendance) ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="flex items-center gap-1">
+                      {translatedSegment}
+                      <ChevronDownIcon className="text-primary" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem>
+                        <BreadcrumbLink asChild>
+                          <Link
+                            className="w-full"
+                            href={`${pathname.replace(
+                              /\/(tutors|attendance)$/,
+                              isTutors ? "/attendance" : "/tutors"
+                            )}`}
+                          >
+                            {isTutors ? "Asistencia" : "Tutores"}
+                          </Link>
+                        </BreadcrumbLink>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : isFirst || isLast || hasSpace ? (
                   <span className={isLast ? "font-normal text-foreground" : ""}>
                     {translatedSegment}
                   </span>

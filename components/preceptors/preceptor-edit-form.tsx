@@ -38,12 +38,14 @@ import { Input } from "@/components/ui/input";
 import { UpdatePreceptor } from "@/actions/preceptor";
 import { cn } from "@/lib/utils";
 import { roles } from "@/constants/data";
+import { useSession } from "next-auth/react";
 
 type User = z.infer<typeof UserSchema>;
 
 export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
@@ -140,7 +142,7 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                     <Input
                       placeholder="Email (requerido)"
                       {...field}
-                      disabled={isPending}
+                      disabled
                     />
                   </FormControl>
                   <FormMessage />
@@ -160,6 +162,7 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                       {...field}
                       disabled={isPending}
                       type="tel"
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -183,7 +186,7 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                         className={cn(
                           "pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground"
-                        )}
+                        )} disabled={session?.user?.role !== "ADMIN"}
                       >
                         <SelectValue placeholder="Seleccionar rol (requerido)" />
                       </SelectTrigger>

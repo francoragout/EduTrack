@@ -29,12 +29,14 @@ import { UserSchema } from "@/lib/zod";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { UpdateTutor } from "@/actions/tutor";
+import { useSession } from "next-auth/react";
 
 type User = z.infer<typeof UserSchema>;
 
 export default function TutorEditForm({ tutor }: { tutor: User }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const form = useForm<z.infer<typeof UserSchema>>({
@@ -68,6 +70,8 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
           variant="ghost"
           size="sm"
           className="flex justify-start pl-2 w-full"
+          disabled={session?.user?.role !== "ADMIN"}
+
         >
           <Pencil className="mr-2 h-4 w-4" />
           Editar

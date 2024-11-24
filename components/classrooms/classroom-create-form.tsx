@@ -39,6 +39,7 @@ import { useDispatch } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
 import { ClassroomSchema, UserSchema } from "@/lib/zod";
 import { PlusCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 type Preceptors = z.infer<typeof UserSchema>;
 
@@ -49,6 +50,7 @@ export default function ClassroomCreateForm({
 }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof ClassroomSchema>>({
     resolver: zodResolver(ClassroomSchema),
@@ -76,7 +78,12 @@ export default function ClassroomCreateForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="h-8" size="sm">
+        <Button
+          variant="default"
+          className="h-8"
+          size="sm"
+          disabled={session?.user?.role !== "ADMIN"}
+        >
           <PlusCircle className="flex sm:hidden h-4 w-4" />
           <span className="hidden sm:flex">Agregar Aula</span>
         </Button>

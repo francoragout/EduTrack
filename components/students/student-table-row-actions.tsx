@@ -31,6 +31,7 @@ import {
 import { DeleteStudent } from "@/actions/student";
 import { toast } from "sonner";
 import StudentEditForm from "./student-edit-form";
+import { useSession } from "next-auth/react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -40,7 +41,8 @@ export function StudentsTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const student = StudentSchema.parse(row.original);
-  
+  const { data: session } = useSession();
+
   const handleDelete = async () => {
     DeleteStudent(student.id ?? "", student.classroomId ?? "").then((response) => {
       if (response.success) {
@@ -102,6 +104,7 @@ export function StudentsTableRowActions<TData>({
                 variant="ghost"
                 size="sm"
                 className="flex justify-start pl-2 w-full"
+                disabled={session?.user?.role !== "ADMIN"}
               >
                 <Trash className="mr-2 h-4 w-4" />
                 Eliminar

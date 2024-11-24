@@ -2,6 +2,7 @@ import { StudentsColumns } from "@/components/students/students-columns";
 import { StudentsTable } from "@/components/students/students-table";
 import { db } from "@/lib/db";
 import { StudentSchema } from "@/lib/zod";
+import { SessionProvider } from "next-auth/react";
 import { z } from "zod";
 
 type Student = z.infer<typeof StudentSchema>;
@@ -47,10 +48,12 @@ export default async function StudentsPage({
   }
 
   return (
-    <StudentsTable
-      columns={StudentsColumns}
-      data={data}
-      classroom={classroom}
-    />
+    <SessionProvider>
+      <StudentsTable
+        columns={StudentsColumns}
+        data={data}
+        classroom={classroom}
+      />
+    </SessionProvider>
   );
 }

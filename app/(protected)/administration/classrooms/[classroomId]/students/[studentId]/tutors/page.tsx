@@ -2,6 +2,7 @@ import { TutorsColumns } from "@/components/tutors/tutors-columns";
 import { TutorsTable } from "@/components/tutors/tutors-table";
 import { db } from "@/lib/db";
 import { UserOnStudentSchema, UserSchema } from "@/lib/zod";
+import { SessionProvider } from "next-auth/react";
 import { z } from "zod";
 
 type User = z.infer<typeof UserSchema>;
@@ -16,7 +17,7 @@ async function getData(studentId: string): Promise<User[]> {
       student: true,
     },
   });
-  
+
   return tutors.map((tutor) => ({
     ...tutor.user,
     studentId, // Añadir studentId a cada tutor
@@ -66,11 +67,13 @@ export default async function TutorsPage({
   const data = await getData(studentId);
 
   return (
-    <TutorsTable
-      data={data}
-      columns={TutorsColumns}
-      classroom={classroom}
-      student={student}
-    />
+    <SessionProvider>
+      <TutorsTable
+        data={data}
+        columns={TutorsColumns}
+        classroom={classroom}
+        student={student}
+      />
+    </SessionProvider>
   );
 }
