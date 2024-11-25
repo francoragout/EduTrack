@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { UserSchema } from "@/lib/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { AdminTableRowActions } from "./admin-table-row-actions";
 
 type User = z.infer<typeof UserSchema>;
 
@@ -47,26 +48,14 @@ export const AdminsColumns: ColumnDef<User>[] = [
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "phone",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Creado el" />
+      <DataTableColumnHeader column={column} title="Teléfono" />
     ),
-    cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date;
-      return (
-        <div>
-          {date.toLocaleDateString("es-AR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </div>
-      );
-    },
+    cell: ({ row }) => <div>{row.getValue("phone")}</div>,
   },
-
-  //   {
-  //     id: "actions",
-  //     cell: ({ row }) => <GradeTableRowActions row={row} />,
-  //   },
+  {
+    id: "actions",
+    cell: ({ row }) => <AdminTableRowActions row={row} />,
+  },
 ];

@@ -27,6 +27,7 @@ import {
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { setPathname } from "@/lib/features/pathname/pathnameSlice";
+import { AdminsTableToolbar } from "./admins-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -74,6 +75,7 @@ export function AdminsTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
+      <AdminsTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -5,24 +5,14 @@ import { UserSchema } from "@/lib/zod";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export const GetPreceptors = async () => {
-  const preceptors = await db.user.findMany({
-    where: {
-      role: "EDITOR",
-    },
-  });
-
-  return preceptors.map((preceptor) => UserSchema.parse(preceptor));
-};
-
-export const CreatePreceptor = async (values: z.infer<typeof UserSchema>) => {
+export const CreateAdmin = async (values: z.infer<typeof UserSchema>) => {
   const validatedFields = UserSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Faltan campos. No se pudo crear el preceptor.",
+      message: "Faltan campos. No se pudo crear el administrador.",
     };
   }
 
@@ -35,27 +25,27 @@ export const CreatePreceptor = async (values: z.infer<typeof UserSchema>) => {
         lastName,
         email,
         phone,
-        role: "EDITOR",
+        role: "ADMIN",
       },
     });
-    
-    revalidatePath("/administration/preceptors");
+
+    revalidatePath("/administration/admins");
     return {
       success: true,
-      message: "Preceptor creado",
+      message: "Administrador creado",
     };
   } catch (error) {
-    console.error("Error creating preceptor:", error);
+    console.error("Error creating admin:", error);
     return {
       success: false,
-      message: "Error al crear preceptor",
+      message: "Error al crear administrador",
     };
   }
 };
 
-export const UpdatePreceptor = async (
+export const UpdateAdmin = async (
   values: z.infer<typeof UserSchema>,
-  preceptorId: string
+  adminId: string
 ) => {
   const validatedFields = UserSchema.safeParse(values);
 
@@ -63,7 +53,7 @@ export const UpdatePreceptor = async (
     return {
       success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Faltan campos. No se pudo actualizar el preceptor.",
+      message: "Faltan campos. No se pudo actualizar el administrador.",
     };
   }
 
@@ -72,7 +62,7 @@ export const UpdatePreceptor = async (
   try {
     await db.user.update({
       where: {
-        id: preceptorId,
+        id: adminId,
       },
       data: {
         firstName,
@@ -83,22 +73,35 @@ export const UpdatePreceptor = async (
       },
     });
 
-    revalidatePath("/administration/preceptors");
+    revalidatePath("/administration/admins");
     return {
       success: true,
-      message: "Preceptor actualizado",
+      message: "Administrador actualizado",
     };
   } catch (error) {
-    console.error("Error updating preceptor:", error);
+    console.error("Error updating admin:", error);
     return {
       success: false,
-      message: "Error al actualizar preceptor",
+      message: "Error al actualizar administrador",
     };
   }
 };
 
-export const DeletePreceptor = async (id: string) => {
+export const DeleteAdmin = async (id: string) => {
   try {
+    const countAdmins = await db.user.count({
+      where: {
+        role: "ADMIN",
+      },
+    });
+
+    if (countAdmins === 1) {
+      return {
+        success: false,
+        message: "No se puede eliminar el único administrador",
+      };
+    }
+
     await db.user.delete({
       where: {
         id,
@@ -108,13 +111,13 @@ export const DeletePreceptor = async (id: string) => {
     revalidatePath("/administration/preceptors");
     return {
       success: true,
-      message: "Preceptor eliminado",
+      message: "Administrador eliminado",
     };
   } catch (error) {
-    console.error("Error deleting preceptor:", error);
+    console.error("Error deleting admin:", error);
     return {
       success: false,
-      message: "Error al eliminar preceptor",
+      message: "Error al eliminar administrador",
     };
   }
-}
+};

@@ -28,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   events: {
     // El evento linkAccount se dispara cuando una cuenta (proveedor OAuth: GitHub, Google, Facebook, etc.)  se vincula a un usuario existente en tu base de datos.
     async linkAccount({ user }) {
+      console.log(user);
       await db.user.update({
         where: { id: user.id },
         data: {

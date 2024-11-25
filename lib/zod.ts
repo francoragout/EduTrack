@@ -49,6 +49,7 @@ const UserSchema: z.ZodType<any> = z.lazy(() =>
     createdAt: z.date().optional(),
     classrooms: z.array(ClassroomSchema).optional(),
     studentId: z.string().optional(),
+    emailVerified: z.date().nullish(),
   })
 );
 

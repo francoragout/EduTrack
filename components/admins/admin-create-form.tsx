@@ -18,32 +18,19 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "sonner";
-import { Pencil } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { UserSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
-import { UpdatePreceptor } from "@/actions/preceptor";
-import { cn } from "@/lib/utils";
-import { roles } from "@/constants/data";
 import { useSession } from "next-auth/react";
+import { CreateAdmin } from "@/actions/admin";
 
-type User = z.infer<typeof UserSchema>;
-
-export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
+export default function AdminCreateForm() {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
@@ -51,20 +38,19 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      firstName: preceptor.firstName,
-      lastName: preceptor.lastName,
-      email: preceptor.email,
-      phone: preceptor.phone,
-      role: preceptor.role,
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      form.reset(values);
-      UpdatePreceptor(values, preceptor.id ?? "").then((response) => {
+      CreateAdmin(values).then((response) => {
         if (response.success) {
           toast.success(response.message);
+          form.reset();
           setOpen(false);
         } else {
           toast.error(response.message);
@@ -77,18 +63,18 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
+          variant="default"
+          className="h-8"
           size="sm"
-          className="flex justify-start pl-2 w-full"
           disabled={session?.user?.role !== "ADMIN"}
         >
-          <Pencil className="mr-2 h-4 w-4" />
-          Editar
+          <PlusCircle className="flex sm:hidden h-4 w-4" />
+          <span className="hidden sm:flex">Agregar Administrador</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar Preceptor</DialogTitle>
+          <DialogTitle>Crear Administrador</DialogTitle>
           <DialogDescription>
             Utilice Tabs para navegar más rápido entre los campos.
           </DialogDescription>
@@ -109,7 +95,6 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                       placeholder="Nombre (requerido)"
                       {...field}
                       disabled={isPending}
-                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -128,7 +113,6 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                       placeholder="Apellido (requerido)"
                       {...field}
                       disabled={isPending}
-                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -146,16 +130,10 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                     <Input
                       placeholder="Email (requerido)"
                       {...field}
-                      disabled={isPending || preceptor.emailVerified !== null}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
-                  {preceptor.emailVerified !== null && (
-                    <FormDescription>
-                      El email no se puede editar si el usuario ya lo ha
-                      verificado.
-                    </FormDescription>
-                  )}
                 </FormItem>
               )}
             />
@@ -172,46 +150,8 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                       {...field}
                       disabled={isPending}
                       type="tel"
-                      value={field.value ?? ""}
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Rol</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    disabled={isPending}
-                    defaultValue={field.value || ""}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        className={cn(
-                          "pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                        disabled={isPending}
-                      >
-                        <SelectValue placeholder="Seleccionar rol (requerido)" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectGroup>
-                        {roles.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {role.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

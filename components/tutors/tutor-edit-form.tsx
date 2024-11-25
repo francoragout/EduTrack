@@ -18,6 +18,7 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -51,11 +52,11 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      setOpen(false);
+      form.reset(values);
       UpdateTutor(values, tutor.id ?? "", pathname).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          form.reset();
+          setOpen(false);
         } else {
           toast.error(response.message);
         }
@@ -71,7 +72,6 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
           size="sm"
           className="flex justify-start pl-2 w-full"
           disabled={session?.user?.role !== "ADMIN"}
-
         >
           <Pencil className="mr-2 h-4 w-4" />
           Editar
@@ -137,10 +137,16 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
                     <Input
                       placeholder="Email (requerido)"
                       {...field}
-                      disabled={isPending}
+                      disabled={isPending || tutor.emailVerified !== null}
                     />
                   </FormControl>
                   <FormMessage />
+                  {tutor.emailVerified !== null && (
+                    <FormDescription>
+                      El email no se puede editar si el usuario ya lo ha
+                      verificado.
+                    </FormDescription>
+                  )}
                 </FormItem>
               )}
             />
@@ -157,7 +163,7 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
                       {...field}
                       disabled={isPending}
                       type="tel"
-                      value={field.value || ""}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />

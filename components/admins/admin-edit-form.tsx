@@ -36,14 +36,14 @@ import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 import { UserSchema } from "@/lib/zod";
 import { Input } from "@/components/ui/input";
-import { UpdatePreceptor } from "@/actions/preceptor";
 import { cn } from "@/lib/utils";
 import { roles } from "@/constants/data";
 import { useSession } from "next-auth/react";
+import { UpdateAdmin } from "@/actions/admin";
 
 type User = z.infer<typeof UserSchema>;
 
-export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
+export default function AdminEditForm({ admin }: { admin: User }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
@@ -51,18 +51,18 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
   const form = useForm<z.infer<typeof UserSchema>>({
     resolver: zodResolver(UserSchema),
     defaultValues: {
-      firstName: preceptor.firstName,
-      lastName: preceptor.lastName,
-      email: preceptor.email,
-      phone: preceptor.phone,
-      role: preceptor.role,
+      firstName: admin.firstName,
+      lastName: admin.lastName,
+      email: admin.email,
+      phone: admin.phone,
+      role: admin.role,
     },
   });
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
       form.reset(values);
-      UpdatePreceptor(values, preceptor.id ?? "").then((response) => {
+      UpdateAdmin(values, admin.id ?? "").then((response) => {
         if (response.success) {
           toast.success(response.message);
           setOpen(false);
@@ -88,7 +88,7 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar Preceptor</DialogTitle>
+          <DialogTitle>Editar Admnistrador</DialogTitle>
           <DialogDescription>
             Utilice Tabs para navegar más rápido entre los campos.
           </DialogDescription>
@@ -146,11 +146,11 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                     <Input
                       placeholder="Email (requerido)"
                       {...field}
-                      disabled={isPending || preceptor.emailVerified !== null}
+                      disabled={isPending || admin.emailVerified !== null}
                     />
                   </FormControl>
                   <FormMessage />
-                  {preceptor.emailVerified !== null && (
+                  {admin.emailVerified !== null && (
                     <FormDescription>
                       El email no se puede editar si el usuario ya lo ha
                       verificado.
@@ -189,7 +189,7 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
                   <Select
                     onValueChange={field.onChange}
                     disabled={isPending}
-                    defaultValue={field.value || ""}
+                    defaultValue={field.value ?? ""}
                   >
                     <FormControl>
                       <SelectTrigger

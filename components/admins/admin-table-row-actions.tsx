@@ -21,24 +21,24 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { UserSchema } from "@/lib/zod";
-import { MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import PreceptorEditForm from "./preceptor-edit-form";
-import { DeletePreceptor } from "@/actions/preceptor";
+import AdminEditForm from "./admin-edit-form";
+import { DeleteAdmin } from "@/actions/admin";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function PreceptorTableRowActions<TData>({
+export function AdminTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const preceptor = UserSchema.parse(row.original);
+  const admin = UserSchema.parse(row.original);
   const { data: session } = useSession();
 
   const handleDelete = async () => {
-    DeletePreceptor(preceptor.id ?? "").then((response) => {
+    DeleteAdmin(admin.id ?? "").then((response) => {
       if (response.success) {
         toast.success(response.message);
       } else {
@@ -59,7 +59,7 @@ export function PreceptorTableRowActions<TData>({
         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="flex flex-col">
-          <PreceptorEditForm preceptor={preceptor} />
+          <AdminEditForm admin={admin} />
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
@@ -79,11 +79,11 @@ export function PreceptorTableRowActions<TData>({
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Esta acción no se puede deshacer. Esto eliminará
-                  permanentemente al preceptor:
+                  permanentemente al administrador:
                   {
                     <span className="text-primary">
                       {" "}
-                      &apos;{preceptor.firstName} {preceptor.lastName}&apos;
+                      &apos;{admin.firstName} {admin.lastName}&apos;
                     </span>
                   }{" "}
                   y todos los datos asociados de nuestros servidores.
