@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import React from "react";
 import { auth } from "@/auth";
 import DinamicBreadcrumb from "@/components/dinamic-breadcrumb";
+import { redirect } from "next/navigation";
 
 interface AdministratioLayoutProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ export default async function AdministrationLayout({
   const session = await auth();
 
   if (session?.user?.role !== "ADMIN" && session?.user?.role !== "EDITOR") {
-    return <div>You are not admin</div>;
+    redirect("/");
   }
 
   return (

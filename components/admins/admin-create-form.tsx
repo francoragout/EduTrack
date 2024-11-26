@@ -50,8 +50,8 @@ export default function AdminCreateForm() {
       CreateAdmin(values).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          form.reset();
           setOpen(false);
+          form.reset();
         } else {
           toast.error(response.message);
         }

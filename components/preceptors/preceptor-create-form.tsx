@@ -47,10 +47,10 @@ export default function PreceptorCreateForm() {
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      setOpen(false);
       CreatePreceptor(values).then((response) => {
         if (response.success) {
           toast.success(response.message);
+          setOpen(false);
           form.reset();
         } else {
           toast.error(response.message);

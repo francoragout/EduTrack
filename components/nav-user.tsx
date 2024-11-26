@@ -25,9 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOut, useSession } from "next-auth/react";
 import { PersonIcon } from "@radix-ui/react-icons";
-import { Button } from "./ui/button";
 import SignOut from "./signout";
 
 export function NavUser({ session }: { session: any }) {
