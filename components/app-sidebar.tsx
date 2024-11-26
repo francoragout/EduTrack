@@ -43,6 +43,10 @@ const data = {
           title: "Aulas",
           url: "/administration/classrooms",
         },
+        {
+          title: "Vista en general",
+          url: "/administration/overview",
+        },
       ],
     },
   ],

@@ -62,7 +62,8 @@ const AttendanceSchema = z.object({
 });
 
 // Student schema
-const StudentSchema = z.object({
+const StudentSchema: z.ZodType<any> = z.lazy(() =>
+  z.object({
   id: z.string().optional(),
   firstName: z
     .string()
@@ -82,7 +83,8 @@ const StudentSchema = z.object({
     }),
   attendance: z.array(AttendanceSchema).optional(),
   classroomId: z.string().optional(),
-});
+  classroom: ClassroomSchema.optional(),
+}));
 
 // UserOnStudent schema
 const UserOnStudentSchema = z.object({

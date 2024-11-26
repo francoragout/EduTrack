@@ -4,11 +4,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table-column-header";
 import { StudentsTableRowActions } from "./student-table-row-actions";
 import { z } from "zod";
-import { StudentSchema } from "@/lib/zod";
+import { AttendanceSchema, StudentSchema } from "@/lib/zod";
 import clsx from "clsx";
 import { Checkbox } from "../ui/checkbox";
 
 type Student = z.infer<typeof StudentSchema>;
+type Attendance = z.infer<typeof AttendanceSchema>;
 
 export const StudentsColumns: ColumnDef<Student>[] = [
   {
@@ -56,24 +57,27 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     ),
     cell: ({ row }) => {
       const attendance = row.original.attendance ?? [];
-      const absent = attendance.filter((a) => a.status === "ABSENT").length;
-      const late = attendance.filter((a) => a.status === "LATE").length / 2;
+      const absent = attendance.filter(
+        (a: Attendance) => a.status === "ABSENT"
+      ).length;
+      const late =
+        attendance.filter((a: Attendance) => a.status === "LATE").length / 2;
       const totalAbsences = absent + late;
       const totalAllowedAbsences = 15;
       const attendancePercentage =
         100 - (totalAbsences / totalAllowedAbsences) * 100;
 
       return (
-        <div 
-          // className={clsx(
-          //   attendancePercentage === 100 && "text-green-500",
-          //   attendancePercentage >= 50 &&
-          //     attendancePercentage < 100 &&
-          //     "text-yellow-500",
-          //   attendancePercentage < 50 && "text-red-500",
+        <div
+        // className={clsx(
+        //   attendancePercentage === 100 && "text-green-500",
+        //   attendancePercentage >= 50 &&
+        //     attendancePercentage < 100 &&
+        //     "text-yellow-500",
+        //   attendancePercentage < 50 && "text-red-500",
 
-          //   "font-medium"
-          // )}
+        //   "font-medium"
+        // )}
         >
           {attendancePercentage.toFixed(1)}%
         </div>
@@ -87,7 +91,9 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     ),
     cell: ({ row }) => {
       const attendance = row.original.attendance ?? [];
-      const absent = attendance.filter((a) => a.status === "ABSENT").length;
+      const absent = attendance.filter(
+        (a: Attendance) => a.status === "ABSENT"
+      ).length;
 
       return <div>{absent}</div>;
     },
@@ -99,7 +105,9 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     ),
     cell: ({ row }) => {
       const attendance = row.original.attendance ?? [];
-      const late = attendance.filter((a) => a.status === "LATE").length;
+      const late = attendance.filter(
+        (a: Attendance) => a.status === "LATE"
+      ).length;
       return <div>{late}</div>;
     },
   },
@@ -110,8 +118,11 @@ export const StudentsColumns: ColumnDef<Student>[] = [
     ),
     cell: ({ row }) => {
       const attendance = row.original.attendance ?? [];
-      const absent = attendance.filter((a) => a.status === "ABSENT").length;
-      const late = attendance.filter((a) => a.status === "LATE").length / 2;
+      const absent = attendance.filter(
+        (a: Attendance) => a.status === "ABSENT"
+      ).length;
+      const late =
+        attendance.filter((a: Attendance) => a.status === "LATE").length / 2;
       return <div>{absent + late}</div>;
     },
   },

@@ -80,3 +80,41 @@ export const roles = [
     label: "Usuario",
   },
 ];
+
+export const shortGrades = [
+  {
+    value: "FIRST",
+    label: "1",
+  },
+  {
+    value: "SECOND",
+    label: "2",
+  },
+  {
+    value: "THIRD",
+    label: "3",
+  },
+  {
+    value: "FOURTH",
+    label: "4",
+  },
+  {
+    value: "FIFTH",
+    label: "5",
+  },
+  {
+    value: "SIXTH",
+    label: "6",
+  },
+];
+
+export const shortShifts = [
+  {
+    value: "MORNING",
+    label: "M",
+  },
+  {
+    value: "AFTERNOON",
+    label: "T",
+  },
+];
