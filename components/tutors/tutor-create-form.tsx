@@ -55,11 +55,11 @@ export default function TutorCreateForm({
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      setOpen(false);
       CreateTutor(values, studentId, pathname).then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
+          setOpen(false);
         } else {
           toast.error(response.message);
         }

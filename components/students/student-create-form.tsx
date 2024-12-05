@@ -51,11 +51,11 @@ export default function StudentCreateForm({
 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
-      setOpen(false);
       CreateStudent(values, classroom.id ?? "").then((response) => {
         if (response.success) {
           toast.success(response.message);
           form.reset();
+          setOpen(false);
         } else {
           toast.error(response.message);
         }

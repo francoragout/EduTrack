@@ -106,7 +106,7 @@ export function StudentsTableToolbar<TData>({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirmar Ausencia</AlertDialogTitle>
+                  <AlertDialogTitle>Confirmar Falta</AlertDialogTitle>
                   <Separator />
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (
@@ -152,7 +152,7 @@ export function StudentsTableToolbar<TData>({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Confirmar Llegada Tarde</AlertDialogTitle>
+                  <AlertDialogTitle>Confirmar Media Falta</AlertDialogTitle>
                   <Separator />
                   <AlertDialogDescription className="flex flex-col">
                     {table.getSelectedRowModel().rows.map((row) => (

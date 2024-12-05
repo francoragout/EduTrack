@@ -59,12 +59,11 @@ export default function AttendanceEditForm({
 
   function onSubmit(values: z.infer<typeof AttendanceSchema>) {
     startTransition(() => {
-      setOpen(false);
       UpdateAttendance(values, attendance.id ?? "", pathname).then(
         (response) => {
           if (response.success) {
             toast.success(response.message);
-            form.reset();
+            setOpen(false);
           } else {
             toast.error(response.message);
           }

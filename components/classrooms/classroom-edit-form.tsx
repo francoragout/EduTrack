@@ -68,11 +68,10 @@ export default function ClassroomEditForm({
 
   function onSubmit(values: z.infer<typeof ClassroomSchema>) {
     startTransition(() => {
-      setOpen(false);
       UpdateClassroom(values, classroom.id ?? "").then((response) => {
         if (response.success) {
           toast.success(response.message);
-          form.reset();
+          setOpen(false);
         } else {
           toast.error(response.message);
         }

@@ -52,7 +52,6 @@ export default function TutorEditForm({ tutor }: { tutor: User }) {
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      form.reset(values);
       UpdateTutor(values, tutor.id ?? "", pathname).then((response) => {
         if (response.success) {
           toast.success(response.message);

@@ -55,11 +55,10 @@ export default function StudentEditForm({
 
   function onSubmit(values: z.infer<typeof StudentSchema>) {
     startTransition(() => {
-      setOpen(false);
       UpdateStudent(values, student.id ?? "", classroomId).then((response) => {
         if (response.success) {
           toast.success(response.message);
-          form.reset();
+          setOpen(false);
         } else {
           toast.error(response.message);
         }

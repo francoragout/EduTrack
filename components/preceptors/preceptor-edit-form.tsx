@@ -61,7 +61,6 @@ export default function PreceptorEditForm({ preceptor }: { preceptor: User }) {
 
   function onSubmit(values: z.infer<typeof UserSchema>) {
     startTransition(() => {
-      form.reset(values);
       UpdatePreceptor(values, preceptor.id ?? "").then((response) => {
         if (response.success) {
           toast.success(response.message);

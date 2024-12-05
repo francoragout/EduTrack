@@ -38,7 +38,7 @@ export const CreatePreceptor = async (values: z.infer<typeof UserSchema>) => {
         role: "EDITOR",
       },
     });
-    
+
     revalidatePath("/administration/preceptors");
     return {
       success: true,
@@ -83,6 +83,17 @@ export const UpdatePreceptor = async (
       },
     });
 
+    if (role !== "EDITOR") {
+      await db.classroom.updateMany({
+        where: {
+          userId: preceptorId,
+        },
+        data: {
+          userId: null,
+        },
+      });
+    }
+
     revalidatePath("/administration/preceptors");
     return {
       success: true,
@@ -117,4 +128,4 @@ export const DeletePreceptor = async (id: string) => {
       message: "Error al eliminar preceptor",
     };
   }
-}
+};

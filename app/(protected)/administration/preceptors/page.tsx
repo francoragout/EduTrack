@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { PreceptorsColumns } from "@/components/preceptors/preceptors-columns";
 import { PreceptorsTable } from "@/components/preceptors/preceptors-table";
 import { db } from "@/lib/db";
