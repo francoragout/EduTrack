@@ -19,6 +19,12 @@ export function TableSkeleton() {
           <Skeleton className="h-[32px] w-[40px] md:w-[147px]" />
         </div>
       )}
+      {pathname === "/administration/classrooms" && (
+        <div className="flex justify-between">
+          <Skeleton className="h-[32px] w-[150px] lg:w-[327px]" />
+          <Skeleton className="h-[32px] w-[40px] md:w-[111px]" />
+        </div>
+      )}
       <div className="space-y-2">
         <Skeleton className="h-[48px]" />
         <Skeleton className="h-[57px]" />

@@ -1,4 +1,3 @@
-import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
@@ -9,6 +8,8 @@ import React from "react";
 import { auth } from "@/auth";
 import DinamicBreadcrumb from "@/components/dinamic-breadcrumb";
 import { redirect } from "next/navigation";
+import { SidebarLeft } from "@/components/sidebar-left";
+import { SidebarRight } from "@/components/sidebar-right";
 
 interface AdministratioLayoutProps {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export default async function AdministrationLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebar session={session} />
+      <SidebarLeft session={session} />
       <SidebarInset className="overflow-x-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b justify-between">
           <div className="flex items-center gap-2 px-3">
@@ -36,6 +37,7 @@ export default async function AdministrationLayout({
         </header>
         <div className="gap-4 p-4">{children}</div>
       </SidebarInset>
+      <SidebarRight session={session}/>
     </SidebarProvider>
   );
 }

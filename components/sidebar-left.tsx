@@ -34,6 +34,14 @@ const data = {
           title: "Preceptores",
           url: "/administration/preceptors",
         },
+        {
+          title: "Profesores",
+          url: "/administration/teachers",
+        },
+        {
+          title: "Tutores",
+          url: "/administration/students",
+        },
       ],
     },
     {
@@ -47,6 +55,10 @@ const data = {
           title: "Notas",
           url: "/administration/subjects",
         },
+        {
+          title: "Exámenes",
+          url: "/administration/exams",
+        }
       ],
     },
     {
@@ -56,16 +68,12 @@ const data = {
           title: "Aulas",
           url: "/administration/classrooms",
         },
-        {
-          title: "Alumnos (faltas)",
-          url: "/administration/overview",
-        },
       ],
     },
   ],
 };
 
-export function AppSidebar({
+export function SidebarLeft({
   session,
   ...props
 }: React.ComponentProps<typeof Sidebar> & { session: any }) {
